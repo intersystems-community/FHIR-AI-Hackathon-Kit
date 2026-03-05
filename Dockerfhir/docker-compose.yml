@@ -12,6 +12,5 @@ services:
       - 32783:52773
       - 32784:53773
     volumes:
-      - ./data:/data
       - ./fhirUI:/usr/irissys/csp/fhirUI
       - ./:/home/irisowner/irisdev
