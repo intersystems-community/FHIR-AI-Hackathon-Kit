@@ -1,3 +1,5 @@
 /data/ifconfig
 **/.ipynb_checkpoints/
 Tutorial/Utils/__pycache__/get_iris_connection.cpython-313.pyc
+.venv/
+**/.env

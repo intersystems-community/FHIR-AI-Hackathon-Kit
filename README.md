@@ -30,9 +30,9 @@ This repo has 4 main sections:
 
 - **Docker** - The IRIS-health instance and FHIR server in all examples are run in a docker container, for this you will need to install [Docker](https://www.docker.com/)
 
-- **Ollama** - The last step of the main tutorial is to query a local Large Language model, which I have done through Ollama. If you are interested in using a local chatbot, you're best to install Ollama which can be done from their [website](https://ollama.com/).
+- **Ollama** - One of the main tutorial steps is to query a local Large Language model, which is done with Ollama. If you are interested in using a local chatbot, you're best to install Ollama which can be done from their [website](https://ollama.com/).
  
-- **Python Packages** - Various other python packages are used throughout, these are listed in the requirements.txt file and can be installed easily: `pip install -r requirements.txt`. I've stated whenever a new pacakage is used throughout the demos, so if you'd rather only install the packages you need you can skip this and install the remaining packages when you need them.
+- **Python Packages** - Various other python packages are used throughout, these are listed in the requirements.txt file and can be installed easily: `pip install -r requirements.txt`. It is stated whenever a new pacakage is used throughout the demos, so if you'd rather only install the packages you need you can skip this and install the remaining packages when you need them.
 
 # FHIR + AI Chatbot Demo
 
@@ -59,18 +59,18 @@ This is a start-to-finish tutorial which goes through:
 1. Use the IRIS FHIR-SQL builder to create a SQL table from the FHIR data
 2. Query this SQL table from Python
 
-#### [2 - Create Vector Database](./Tutorial/2-Creating-Vector-DB.ipynb)
+#### [2 - Vector Search](./Tutorial/2-Creating-Vector-DB.ipynb)
 1. Fetch data using SQL queries.
 2. Decode Clinical Notes to plain text
 3. Use a text-embedding model to encode the Clinical Notes to Vectors
 4. Create a new table in IRIS with these Vectors
+5. Perform a rapid vector search to find related notes
 
-#### [3 - Vector Search](/Tutorial/3-Vector-Search-LLM-Prompting.ipynb)
-1. Convert a user query into Vectors
-2. Perform a rapid Vector search to find related notes
-
-#### [3 pt2 - Prompt LLM](/Tutorial/3-Vector-Search-LLM-Prompting.ipynb)
+#### [3 - Prompt a Local LLM](./Tutorial/3-LLM-Prompting.ipynb)
 1. Create a prompt that includes system instructions,  relevant notes, and a user query
 2. Pass prompt to a Large Language Model
 3. Return output to user
 
+#### [4 - Making it Agentic](./Tutorial/4-Making-It-Agentic.ipynb)
+1. Use OpenAI call with langchain to create an agent
+2. Bind tools to agent so it can query the vector database autonomously to retrieve relevant information
