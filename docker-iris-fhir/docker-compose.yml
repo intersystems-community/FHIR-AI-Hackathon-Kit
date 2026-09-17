@@ -1,0 +1,19 @@
+services:
+  iris:
+    container_name: iris-fhir
+    build:
+      context: .
+
+    ports:
+      - "32782:1972"
+      - "32783:52773"
+
+    environment:
+      ISC_DATA_DIRECTORY: /durable
+
+    volumes:
+      - iris-data:/durable
+      - ./:/home/irisowner/dev
+
+volumes:
+  iris-data:

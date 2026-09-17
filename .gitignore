@@ -1,5 +1,6 @@
-/data/ifconfig
+
 **/.ipynb_checkpoints/
-Tutorial/Utils/__pycache__/get_iris_connection.cpython-313.pyc
+**/*.pyc
 .venv/
 **/.env
+docker-iris-fhir/fhir-sql-builder

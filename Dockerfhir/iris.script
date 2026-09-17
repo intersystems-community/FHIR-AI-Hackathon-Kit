@@ -1,7 +1,0 @@
-zn "USER"
-zpm "install fhir-portal"
-zpm "install swagger-ui"
-zpm "load /home/irisowner/irisdev/ -v"
-
-
-halt
