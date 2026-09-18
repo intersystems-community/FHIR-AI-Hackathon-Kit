@@ -1,6 +1,6 @@
 FROM intersystems/irishealth-community:latest-cd
 
-COPY ./data/fhir /tmp/fhir
+
 
 ENV IRISINSTALLDIR=/usr/irissys
 ENV PATH="${PATH}:${IRISINSTALLDIR}/bin"
@@ -21,7 +21,12 @@ USER root
 RUN mkdir -p /durable && \
     chown irisowner:irisowner /durable/ -R
 
+RUN mkdir /opt/fhir && \ 
+    chown irisowner:irisowner /opt/fhir -R
+
 USER irisowner
+
+COPY ./data/fhir /opt/fhir/data/
 
 
 RUN iris start IRIS &&\

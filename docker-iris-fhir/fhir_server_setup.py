@@ -1,7 +1,7 @@
 import iris
 import os
 import shutil
-
+from pathlib import Path
 
 def zn(namespace):
     iris.execute(f'zn "{namespace}"')
@@ -59,14 +59,17 @@ class FHIRServerSetup():
 
 
 
-def setup_swagger_app(src="/home/irisowner/dev/src/swagger-ui", dest="/durable/csp/swagger-ui"):
-    shutil.copytree(src, dest, dirs_exist_ok=True)
+def setup_swagger_app(src="/home/irisowner/dev/src/swagger-ui", dest="/opt/fhir/swagger-ui"):
+
+    destination = Path(dest)
+    destination.parent.mkdir(parents=True, exist_ok=True)
+    shutil.copytree(src, destination, dirs_exist_ok=True)
     print(f"Copied {src} to {dest}")
 
     zn("%SYS")
     props_ref = iris.ref(None)
     sc_ref = iris.ref(None)
-    exists = iris.Security.Applications.Exists("/csp/swagger-ui", props_ref, sc_ref)
+    exists = iris.Security.Applications.Exists("/fhir/swagger-ui", props_ref, sc_ref)
     if not exists:
         prop = iris.arrayref({
             "Type": 2,
@@ -77,12 +80,12 @@ def setup_swagger_app(src="/home/irisowner/dev/src/swagger-ui", dest="/durable/c
             "AutheEnabled": 64,
             "Enabled": 1,
         })
-        sc = iris.Security.Applications.Create("/csp/swagger-ui", prop)
+        sc = iris.Security.Applications.Create("/fhir/swagger-ui", prop)
         if not iris.system.Status.IsOK(sc):
             raise RuntimeError(iris.system.Status.GetErrorText(sc))
-        print("Created /csp/swagger-ui application")
+        print("Created /fhir/swagger-ui application")
     else:
-        print("/csp/swagger-ui application already exists, skipping...")
+        print("/fhir/swagger-ui application already exists, skipping...")
     zn("USER")
 
 
