@@ -91,6 +91,6 @@ def setup_swagger_app(src="/home/irisowner/dev/src/swagger-ui", dest="/opt/fhir/
 
 if __name__ == "__main__":
     unexpire_passwords()
-    fhir_setup = FHIRServerSetup("FHIRSERVER", "/fhir/r4", "/tmp/fhir")
+    fhir_setup = FHIRServerSetup("FHIRSERVER", "/fhir/r4", "/opt/fhir/data")
     fhir_setup.install()
     setup_swagger_app()
