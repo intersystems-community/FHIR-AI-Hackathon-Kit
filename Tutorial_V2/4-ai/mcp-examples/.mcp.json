@@ -1,0 +1,14 @@
+{
+    "mcpServers" :{
+        "FHIR-Server":{
+            "type":"http",
+            "url": "http://localhost:8001/mcp"
+        },
+
+        "VectorSearch":{
+            "type":"stdio",
+            "command": "uv",
+            "args":["run", "mcp-vector-stdio.py"]
+        }
+    }
+}
