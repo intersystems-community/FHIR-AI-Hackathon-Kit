@@ -6,14 +6,14 @@ Layered the same way as the 2.1 tests:
   written into the notebook actually reach a FHIR server. These are the tests
   that catch a changed web server port, a re-pointed FHIR endpoint path, or a
   changed IRIS password.
-* `TestNotebookStructure` -- the local files the notebook reads (the Synthea
-  bundle directory and the clinical note) exist, and the notebook defines its
-  variables before using them.
+* `TestNotebookStructure` -- dependencies are importable and the notebook
+  defines its variables before using them.
 * `TestNotebookExecution` -- the notebook runs top to bottom with no unexpected
   cell raising, and the resources it POSTs come back out of the server.
+  Missing input files (Synthea bundles, clinical note) surface here as cell
+  errors.
 """
 
-import json
 import re
 
 import pytest
@@ -21,7 +21,6 @@ import requests
 from requests.auth import HTTPBasicAuth
 
 from conftest import (
-    LOADING_DATA_DIR,
     NOTEBOOK_2_2,
     assert_no_cell_errors,
     cell_text,
@@ -31,10 +30,6 @@ from conftest import (
     notebook_source,
     read_notebook,
 )
-
-# The notebook reads these paths relative to its own directory.
-SYNTHEA_DIR = LOADING_DATA_DIR / "output" / "fhir"
-CLINICAL_NOTE = LOADING_DATA_DIR / "note_data" / "clinical_note.txt"
 
 REQUEST_TIMEOUT_SECONDS = 60
 
@@ -124,46 +119,7 @@ class TestFhirEndpointAndCredentials:
 
 
 class TestNotebookStructure:
-    """The notebook's local inputs exist and its cells are self-consistent."""
-
-    def test_synthea_bundle_directory_exists(self):
-        assert SYNTHEA_DIR.is_dir(), (
-            f"The notebook lists and uploads every file in {SYNTHEA_DIR}, which does "
-            "not exist. Generate it with the Synthea docker command in the notebook, "
-            "or commit the sample bundles."
-        )
-
-    def test_synthea_directory_contains_patient_bundles(self):
-        files = sorted(p for p in SYNTHEA_DIR.glob("*.json"))
-        assert files, f"No .json bundles found in {SYNTHEA_DIR}."
-        patient_bundles = [p for p in files if not p.name.startswith(("hospitalInformation", "practitionerInformation"))]
-        assert len(patient_bundles) >= 1, (
-            "Expected at least one Synthea patient bundle alongside the hospital and "
-            f"practitioner information files. Found: {[p.name for p in files]}"
-        )
-
-    def test_synthea_bundles_are_valid_fhir_bundles(self):
-        for path in sorted(SYNTHEA_DIR.glob("*.json")):
-            with open(path, "r", encoding="utf-8") as f:
-                body = json.load(f)
-            assert body["resourceType"] == "Bundle", (
-                f"{path.name} is a {body['resourceType']!r}, not a Bundle. The "
-                "notebook POSTs these to the FHIR server's base URL, which only "
-                "accepts Bundles."
-            )
-
-    def test_clinical_note_exists(self):
-        assert CLINICAL_NOTE.exists(), (
-            f"The notebook reads {CLINICAL_NOTE} to build the DocumentReference "
-            "attachment, but the file does not exist."
-        )
-
-    def test_clinical_note_is_the_expected_note(self):
-        text = CLINICAL_NOTE.read_text(encoding="utf-8")
-        assert "Clark Kent" in text, (
-            "The notebook's final cell prints the decoded note and the tutorial text "
-            "expects Clark Kent's record."
-        )
+    """The notebook's dependencies are importable and its cells are self-consistent."""
 
     def test_dependencies_importable(self):
         pytest.importorskip("requests", reason="requests is not installed")
@@ -246,19 +202,19 @@ class TestNotebookExecution:
         text = cell_text(cell)
         assert "<Response [400]>" in text, (
             "The tutorial's teaching point is that the server rejects the malformed "
-            f"subject reference and date with a 400. Got:\n{text}"
+            f"subject reference with a 400. Got:\n{text}"
         )
         assert "MalformedRelativeReference" in text or "malformed" in text.lower()
 
     def test_validation_issues_are_printed(self, executed):
         cell = find_cell(executed, 'for issue in res.json()["issue"]')
         text = cell_text(cell)
-        assert "subject" in text and "date" in text, (
-            f"Expected both the subject and date issues to be printed. Got:\n{text}"
+        assert "subject" in text, (
+            f"Expected the malformed subject issue to be printed. Got:\n{text}"
         )
 
     def test_fixed_documentreference_is_accepted(self, executed):
-        """After fixing the reference and the timestamp, the POST must return 201."""
+        """After fixing the subject reference, the POST must return 201."""
         cells = [
             cell
             for cell in code_cells(executed)
@@ -303,7 +259,7 @@ class TestUploadedDataVisibleOnServer:
         assert res.status_code == 200, f"Patient search failed: {res.status_code} {res.text[:300]}"
         body = res.json()
         assert body["total"] >= 1, (
-            "The Synthea patient 'Walsh511' from output/fhir is not on the server, so "
+            "The Synthea patient 'Walsh511' from data/fhir is not on the server, so "
             "the bundle upload loop did not take effect."
         )
 

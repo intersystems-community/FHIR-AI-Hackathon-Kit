@@ -43,7 +43,7 @@ Each module has three groups of tests, cheapest first:
 ## Deliberate errors
 
 `2.2` teaches FHIR server-side validation by POSTing a `DocumentReference` with
-a malformed subject reference and timestamp, seeing a 400, then fixing it. The
+a malformed subject reference, seeing a 400, then fixing it. The
 400 is asserted as the expected outcome. One cell (`cb56dc36-...`) deliberately
 raises by calling `.json()` on an empty 201 body; its id is listed in
 `DELIBERATE_ERROR_CELL_IDS` so it is excluded from the no-errors check. If you

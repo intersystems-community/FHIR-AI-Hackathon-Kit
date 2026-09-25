@@ -184,9 +184,9 @@ class TestNotebookExecution:
         )
 
     def test_search_function_finds_high_glucose_symptoms(self, executed):
-        cell = find_cell(executed, "def vector_search_diabetes_text")
+        cell = find_cell(executed, "glucose level is too high")
         text = cell_text(cell)
-        assert f"'Source': '{RAW_TEXT_SOURCE}'" in text and "Frequent thirst" in text, (
+        assert f"Source: {RAW_TEXT_SOURCE}" in text and "Frequent thirst" in text, (
             f"vector_search_diabetes_text did not return the thirst/urination text. Got:\n{text}"
         )
 
@@ -205,21 +205,23 @@ class TestNotebookExecution:
         )
 
 
+@pytest.fixture(scope="module")
+def rows_per_source(executed, connection_args) -> dict:
+    """Row count per Source in the vector table, after the notebook has run."""
+    # %EXACT: Source uses the default case-insensitive collation, which would
+    # otherwise upper-case the grouped values.
+    rows = run_query(
+        connection_args,
+        f"SELECT %EXACT(Source), COUNT(*) FROM {VECTOR_TABLE} GROUP BY %EXACT(Source)",
+    )
+    return {source: count for source, count in rows}
+
+
 class TestVectorStoreContents:
     """After execution, the table must hold exactly what the notebook set out to insert.
 
     Depends on `executed` so the notebook has rebuilt the table first.
     """
-
-    @pytest.fixture(scope="class")
-    def rows_per_source(self, executed, connection_args) -> dict:
-        # %EXACT: Source uses the default case-insensitive collation, which would
-        # otherwise upper-case the grouped values.
-        rows = run_query(
-            connection_args,
-            f"SELECT %EXACT(Source), COUNT(*) FROM {VECTOR_TABLE} GROUP BY %EXACT(Source)",
-        )
-        return {source: count for source, count in rows}
 
     def test_all_raw_texts_inserted(self, rows_per_source):
         cell = find_cell(read_notebook(NOTEBOOK_VECTOR_SEARCH), "diabetes_texts = [")

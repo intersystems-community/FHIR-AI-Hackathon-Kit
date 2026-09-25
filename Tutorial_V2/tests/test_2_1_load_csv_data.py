@@ -138,15 +138,16 @@ class TestNotebookStructure:
         find_cell(nb, "class CSVToTable")
 
 
+@pytest.fixture(scope="module")
+def executed(iris_connection_args):
+    """Notebook 2.1 executed once from a clean slate, and cleaned up afterwards."""
+    drop_notebook_tables(iris_connection_args)
+    yield execute_notebook(NOTEBOOK_2_1)
+    drop_notebook_tables(iris_connection_args)
+
+
 class TestNotebookExecution:
     """Execute 2.1 end to end and check the outputs and resulting tables."""
-
-    @pytest.fixture(scope="class")
-    def executed(self, iris_connection_args):
-        drop_notebook_tables(iris_connection_args)
-        nb = execute_notebook(NOTEBOOK_2_1)
-        yield nb
-        drop_notebook_tables(iris_connection_args)
 
     def test_no_cell_raises(self, executed):
         assert_no_cell_errors(executed)
