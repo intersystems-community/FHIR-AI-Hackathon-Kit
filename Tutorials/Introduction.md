@@ -3,15 +3,6 @@
 
 This kit is a set of tutorials to demonstrate how users can build applications with InterSystems IRIS for Health, using FHIR data, Python and AI Agents. This is designed to be a fast entrypoint to using InterSystems IRIS with Python and AI. 
 
-## Introduction to InterSystems IRIS 
-
-InterSystems IRIS is a data platform, meaning it is a platform to build applications around data. Data is stored within one of the fastest, most efficient and flexible databases available. The flexibility from IRIS comes from the native multi-model data structure, meaning it can act as a SQL database, but can also store data as objects, key-value pairs, documents, vectors and more. 
-
-InterSystems IRIS for Health is an extension to InterSystems IRIS, providing additional support for HealthCare data and systems. This includes a FHIR Server, as well as support for HL7, CDA, X12 and many other types. 
-
-All of these features are built with security, concurrency, auditing and support for many users to access the data simultaneously. Making it a powerful platform to build to the worlds most important applications. 
-
-This series uses the Community Edition of InterSystems IRIS for Health, which is free to use and has no major code differences to the licensed version. It does come with [limits on its use](). 
 
 ## What this tutorial series is
 
@@ -88,3 +79,6 @@ For CSV and FHIR data, there are separate tutorials to cover the loading of data
 Following the data loading there are also tutorials on using AI Agents and creating MCP servers around our data access. These later tutorials make use of the data created in earlier tutorials, so you should either run through the earlier tutorials, or run the Python table Setup scripts which perform the same steps. 
 
 Each of the tutorials are IPython (Jupyter) notebooks. These are notebooks which use a continuous Python kernel with executable "cells" containing code. The variables created in this notebook stay in memory, meaning the tutorial can be run interactively, with instructions in-line with code. 
+
+
+# 

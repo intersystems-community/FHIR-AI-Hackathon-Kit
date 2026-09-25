@@ -1,76 +1,94 @@
-# Using IRIS with Python for FHIR and AI applications
 
-This repository contains tutorials for how to use InterSystems IRIS with an external Python Application to combine FHIR data with generative AI methods. 
+# Welcome  to the InterSystems FHIR/AI Hackathon Kit 
 
-## Contents 
+This kit is a set of tutorials to demonstrate how users can build applications with InterSystems IRIS for Health, using FHIR data, Python and AI Agents. This is designed to be a fast entrypoint to using InterSystems IRIS with Python and AI. 
 
-This repo has 4 main sections: 
-- **Tutorial**: contains several markdown and ipython notebook files:
-    - How to set up a FHIR server with Docker
-    - How to create SQL tables from a FHIR Server with FHIR-SQL Builder
-    - Implementing a vector search
-    - Creating a chatbot
-- **Additional Demos** - Some additional tutorials with other ways to use the IRIS FHIR server with Python. This includes: 
-    - [Accessing FHIR resources directly](./Additional-demos/Accessing-FHIR-resources.ipynb)
-    - [Adding data to the FHIR server](./Additional-demos/Adding-FHIR-data-to-IRIS-health.ipynb)
-    - [Generating Synthetic data](./Additional-demos/Making-synthetic-fhir-data.md)
-    - [Integrated Machine Learning in IRIS](./Additional-demos/integratedML.md)
-    - [Creating a FHIR server From Scratch](./Additional-demos/CreateAFHIRServerIn5Minutes.md)
+# Whats New
 
-- **Resources** - Some brief introductions that may be useful to get started quickly. These include: 
-    - [What is InterSystems IRIS](./Reference/what-is-IRIS.md)
-    - [What is FHIR](./Reference/what-is-FHIR.md)
-    - [What is Retrieval augmented generation (RAG)](./Reference/what-is-RAG.md)
+This tutorial series has undergone a complete re-write since version 1 (published October 2025), although still covers similar ground. The previous version is still available in the V1 branch, and features the building of a patient chatbot with Vector Search on Patient vectorized and embedded Patient data. It also made use of On-device local AI with Ollama. 
 
-- **Dockerfhir** - Files to create a local IRIS-health-community instance and FHIR server with Docker. The [main tutorial](./Tutorial/0-FHIR-server-setup.md) covers how this should be used. 
+V2 features more standalone tutorials on using InterSystems IRIS for Health with tabular data, FHIR data and Vector data. It also covers building AI Agents and MCP servers in Python. 
 
-## Requirements 
-
-- **Python** - The tutorial is Python based, so will need Python installed on your computer
-
-- **Docker** - The IRIS-health instance and FHIR server in all examples are run in a docker container, for this you will need to install [Docker](https://www.docker.com/)
-
-- **Ollama** - One of the main tutorial steps is to query a local Large Language model, which is done with Ollama. If you are interested in using a local chatbot, you're best to install Ollama which can be done from their [website](https://ollama.com/).
- 
-- **Python Packages** - Various other python packages are used throughout, these are listed in the requirements.txt file and can be installed easily: `pip install -r requirements.txt`. It is stated whenever a new pacakage is used throughout the demos, so if you'd rather only install the packages you need you can skip this and install the remaining packages when you need them.
-
-# FHIR + AI Chatbot Demo
-
-## Introduction
-
-The main tutorial demonstrates how FHIR data can be combined with IRIS vector search capabilities to build a powerful tool for medical professionals wanting to quickly understand the medical history of a patient. 
-
-We are going to take the data from 'DocumentReference' resources, these consist of clinical notes attached in plain text. This plain text is encoded within the resource and will need to be decoded.
-
-This tutorial is based on a [demo created by Simon Sha](https://community.intersystems.com/post/demo-video-fhir-powered-ai-healthcare-assistant) for the 2025 InterSystems Demo Games. His demonstration is shown here: 
-
-[![IMAGE ALT TEXT HERE](https://img.youtube.com/vi/P5JcdjLNvbc/0.jpg)](https://www.youtube.com/watch?v=P5JcdjLNvbc)
+This re-write was driven by the desire to cover more up-to-date features in the Agentic AI world, as well as a desire to replace extremely computationally heavy, slow and ineffective local AI Models with fast and cheap OpenAI models. 
 
 
-## Tutorial
 
-This is a start-to-finish tutorial which goes through:
+## What this tutorial series is
 
-#### [0 - FHIR server set-up](./Tutorial/0-FHIR-server-setup.md)
-1. Create instance of IRIS-health and FHIR server
-2. Load Data into FHIR Server
+This is a series of interactive tutorials on build applications using **Python** and **InterSystems IRIS For Health** server as the backend data platform. There is a docker template which sets up InterSystems IRIS For Health with a **FHIR server**. This is followed by a series of tutorials on how to access or add data to the FHIR Server or to the SQL database from Python Application. 
 
-#### [1 - Create SQL projection](./Tutorial/1-Using-FHIR-SQL-Builder.ipynb)
-1. Use the IRIS FHIR-SQL builder to create a SQL table from the FHIR data
-2. Query this SQL table from Python
+The tutorials also cover using **vector data** for fast semantic matching. This is a very effective way to build searches against unlabelled, unstructured data. It is particularly effective when combined with AI Agents. 
 
-#### [2 - Vector Search](./Tutorial/2-Creating-Vector-DB.ipynb)
-1. Fetch data using SQL queries.
-2. Decode Clinical Notes to plain text
-3. Use a text-embedding model to encode the Clinical Notes to Vectors
-4. Create a new table in IRIS with these Vectors
-5. Perform a rapid vector search to find related notes
+Finally, the tutorials cover building basic **AI Agents** which can access the data from the InterSystems IRIS for Health instance, including building **MCP servers** to provide access to existing agents. 
 
-#### [3 - Prompt a Local LLM](./Tutorial/3-LLM-Prompting.ipynb)
-1. Create a prompt that includes system instructions,  relevant notes, and a user query
-2. Pass prompt to a Large Language Model
-3. Return output to user
+These tutorials are designed to be a rapid quickstart for you to include InterSystems IRIS into your applications.
 
-#### [4 - Making it Agentic](./Tutorial/4-Making-It-Agentic.ipynb)
-1. Use OpenAI call with langchain to create an agent
-2. Bind tools to agent so it can query the vector database autonomously to retrieve relevant information
+## What this tutorial series is **Not**
+
+This series is not an in-depth look at InterSystems IRIS. The inner workings of InterSystems IRIS are extensive and powerful. There are industry-leading features for integrating healthcare systems and transforming data that are not touched upon in this series. There is also a suite for creating analytics dashboards directly on the data being used. 
+
+In-depth programming with all of the features InterSystems IRIS provides benefits from knowledge InterSystems IRIS Classes and some knowledge of ObjectScript. However, there are still many valuable aspects of InterSystems IRIS that can be accessed through external applications as shown here. 
+
+If you are interested in going into depth with InterSystems IRIS, there are many learning courses available on the [InterSystems Learning Services platform](https://learning.intersystems.com). Its a steep learning curve, but highly fulfilling and provides access to an incredibly powerful data platform. 
+
+AI coding agents are also able to flatten this learning curve, so if you do need features revolving around connecting different health systems or transforming data in a structured and audited way, do not be afraid to ask you coding agent of choice for help on this. The effectiveness of coding agents can also be dramatically improved by equipping it the [iris-agentic-dev](https://github.com/intersystems-community/iris-agentic-dev) MCP Server to give access to InterSystems IRIS. This will be less useful for the Python uses shown in this tutorial series though. 
+
+
+## Setup
+
+### Pre-requisites
+
+- Python
+- [Docker]() 
+- An [OpenAI API Key]() with some credit. Running every step of these tutorials with the current models should cost less than $0.01. You can use other LLM/embedding providers, although information on switching is not provided.  
+
+Before running any of the tutorials, you will need to have Docker installed and running on your system. You can then begin by running the InterSystems IRIS for Health container by executing the setup script available at (docker-iris-fhir/setup.sh)[./docker-iris-fhir/setup.sh] (or the equivalent PowerShell script if you are a Windows Powershell user). 
+
+```sh
+./docker-iris-fhir/setup.sh
+```
+
+You will also need Python installed on your system, and need to install the required libraries. Its recommended that you use a virtual environment for this: 
+
+- Linux/Mac users: 
+```
+python3 -m venv .venv
+source .venv/bin/activate
+```
+
+- Windows PowerShell Users
+
+```
+python3 -m venv .venv
+./.venv/Scripts/activate
+```
+
+- Windows GitBash Users:
+
+```
+python3 -m venv .venv 
+source .venv/Scripts/activate
+```
+
+Then install dependencies: 
+
+```sh
+pip install -r requirements.txt
+```
+
+## Tutorial Series Overview
+
+This tutorial series spans 3 main data-types: 
+- Tabular Data (CSVs and SQL)
+- FHIR Data (healthcare data standard)
+- Vector data (for use with Vector search)
+
+For CSV and FHIR data, there are separate tutorials to cover the loading of data into InterSystems IRIS, and the querying of this data. For Vector data, this is combined into a single tutorial on vector search. 
+
+Following the data loading there are also tutorials on using AI Agents and creating MCP servers around our data access. These later tutorials make use of the data created in earlier tutorials, so you should either run through the earlier tutorials, or run the Python table Setup scripts which perform the same steps. 
+
+Each of the tutorials are IPython (Jupyter) notebooks. These are notebooks which use a continuous Python kernel with executable "cells" containing code. The variables created in this notebook stay in memory, meaning the tutorial can be run interactively, with instructions in-line with code. 
+
+
+# Table Of Contents
+
