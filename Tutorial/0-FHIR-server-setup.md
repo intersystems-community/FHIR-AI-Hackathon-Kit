@@ -36,6 +36,7 @@ docker-compose up -d
 ```
 the -d flag makes it run in the background. 
 
+
 ## Access the IRIS Management Portal
 
 Once the container is started, open your browser and go to:
@@ -43,8 +44,8 @@ Once the container is started, open your browser and go to:
 
 
 **Login Credentials:**
-- **Username:** `_SYSTEM`
-- **Password:** `ISCDEMO`
+- **Username:** `SuperUser`
+- **Password:** `SYS`
 
 Note, sometimes it takes a minute for the management portal to come online here, so if nothing appears at the link above, wait a couple of minutes, then refresh the page. 
 

@@ -5,7 +5,6 @@ InterSystems IRIS has support for a highly automated machine learning process wh
 This quickstart will go through how you can start using IRIS's Integrated Machine Learning tools from scratch to create actionable insights. In just a few SQL commands. 
 
 
-
 ## Install the AutoML requirement with pip 
 
 Open a bash shell in your docker container: 
