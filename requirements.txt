@@ -9,8 +9,8 @@ intersystems-irispython
 # Used for tabular data handling
 pandas
 
-# used for creating embedding models from plain text
-sentence-transformers 
+# Used for HTTP requests (particularly for FHIR queries)
+requests  
 
 ## Used for easier downloading and parsing of fhir resources
 fhirpy
@@ -18,12 +18,15 @@ fhirpy
 ## Used for creating and validating FHIR resources
 fhir.resources
 
-# Used for creating very basic local LLMs 
-transformers
-
-# Used for calling Ollama local LLMs
-ollama
-
 # Used for building LLM applications
-langchain 
-langchain-ollama 
+openai
+langchain[openai]
+langchain[mcp]
+langchain-text-splitters
+fastmcp
+
+python-dotenv
+
+
+## Used for reading PDFs
+pymupdf
