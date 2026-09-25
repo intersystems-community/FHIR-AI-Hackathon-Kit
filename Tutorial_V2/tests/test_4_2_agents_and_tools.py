@@ -9,8 +9,10 @@ tutorials, so on top of the usual layers there is a prerequisites layer:
   deterministic base64 helpers.
 * `TestPrerequisiteData` -- the data each tool reads exists: `Sample.Person`
   (from 2.1), `Diabetes.VectorStore` (from vector-search.ipynb) and the Synthea
-  patient Tish Lemke with a body height Observation (from 2.2). A failure here
-  means an earlier notebook needs running, not that this one is broken.
+  patient Tish Lemke with a body height Observation (from 2.2). `Sample.Person`
+  is rebuilt by 2.1's `setup_csv_data.py` before this module runs; for the
+  others, a failure here means an earlier notebook needs running, not that this
+  one is broken.
 * `TestToolsDirectly` -- each tool function, called without an LLM, returns
   what the agent will need.
 * `TestNotebookExecution` -- the notebook runs top to bottom and each agent
@@ -19,6 +21,9 @@ tutorials, so on top of the usual layers there is a prerequisites layer:
   than on exact wording.
 """
 
+import subprocess
+import sys
+
 import pytest
 import requests
 from dotenv import dotenv_values
@@ -26,6 +31,7 @@ from requests.auth import HTTPBasicAuth
 
 from conftest import (
     AI_DIR,
+    LOADING_DATA_DIR,
     NOTEBOOK_AGENTS,
     VECTOR_TABLE,
     assert_no_cell_errors,
@@ -46,6 +52,16 @@ FHIR_PATIENT_GIVEN = "Tish"
 FHIR_PATIENT_FAMILY = "Lemke"
 BODY_HEIGHT_LOINC = "http://loinc.org|8302-2"
 SPIDERMAN_LAST_NAME = "Parker"
+
+# Skip-setup script that recreates the tables 2.1 builds. test_2_1 drops those
+# tables when it finishes, so this module rebuilds them before reading them.
+SETUP_CSV_DATA_SCRIPT = LOADING_DATA_DIR / "setup_csv_data.py"
+
+
+@pytest.fixture(scope="module", autouse=True)
+def csv_tables_loaded():
+    """Run 2.1's skip-setup script so Sample.Person exists for the SQL tool."""
+    subprocess.run([sys.executable, str(SETUP_CSV_DATA_SCRIPT)], check=True)
 
 
 def cell_namespace(*needles: str) -> dict:
@@ -285,11 +301,15 @@ class TestNotebookExecution:
         )
 
     def test_agent_with_tool_encodes_exactly(self, executed, nb_agents_source):
-        """The tutorial's claim: with the tool, the encoding is perfect."""
+        """The tutorial's claim: with the tool, the encoding is perfect.
+
+        Trailing whitespace is ignored: test_string ends the prompt, and the model
+        strips that trailing space before passing the text to the tool.
+        """
         test_string = extract_last_str_assignment(nb_agents_source, "test_string")
         cell = find_cell(executed, "agent_with_tool.invoke")
         decoded = cell_text(cell).split("Decoding the final response gives: \n\n", 1)[1]
-        assert decoded.rstrip("\n") == test_string, (
+        assert decoded.rstrip() == test_string.rstrip(), (
             f"Decoded tool-assisted answer differs from the original.\n"
             f"Expected: {test_string!r}\nGot:      {decoded!r}"
         )
