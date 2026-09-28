@@ -118,6 +118,7 @@ Each of the tutorials are IPython (Jupyter) notebooks. These are notebooks which
 - [3.1 Adding FHIR data to a FHIR server](./Tutorials/3-fhir/3.1-load-fhir-data.ipynb)
 - [3.2 Accessing FHIR resources](./Tutorials/3-fhir/3.2-querying-fhir-data-with-python.ipynb)
 - [3.3 Viewing the FHIR Specification with Swagger](./Tutorials/3-fhir/3.3-viewing-fhir-specification-with-swagger.md)
+- [3.4 Creating Synthetic FHIR data](./Tutorials/6-extras/create-synthetic-fhir-data.md)
 
 ### 4. Vector Search
 - [4.1 Vector Search](./Tutorials/4-vector-search/4.1-vector-search.ipynb)
@@ -128,6 +129,6 @@ Each of the tutorials are IPython (Jupyter) notebooks. These are notebooks which
 
 ### 6. Extras
 - [Create a FHIR Server in 5 minutes with IRIS Health Community](./Tutorials/6-extras/CreateAFHIRServerIn5Minutes.md)
-- [Creating Synthetic FHIR data](./Tutorials/6-extras/create-synthetic-fhir-data.md)
+
 - [Integrated Machine Learning Quickstart](./Tutorials/6-extras/ML-predictions-made-simple.md)
 
