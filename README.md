@@ -36,13 +36,16 @@ AI coding agents are also able to flatten this learning curve, so if you do need
 
 ## Setup
 
+
 ### Pre-requisites
 
 - Python
 - [Docker](https://www.docker.com/get-started/) 
 - An [OpenAI API Key](https://platform.openai.com/api-keys) with some credit. Running every step of these tutorials with the current models should cost less than $0.01. You can use other LLM/embedding providers, although information on switching is not provided.  
 
-Before running any of the tutorials, you will need to have Docker installed and running on your system. You can then begin by running the InterSystems IRIS for Health container by executing the setup script available at [docker-iris-fhir/start.sh](./docker-iris-fhir/start.sh) (or the equivalent PowerShell script if you are a Windows Powershell user). 
+### Start InterSystems IRIS for Health 
+
+**Before running any of the tutorials, you will need to have Docker installed and running on your system**. You can then begin by running the InterSystems IRIS for Health container by executing the setup script available at [docker-iris-fhir/start.sh](./docker-iris-fhir/start.sh) (or the equivalent PowerShell script if you are a Windows Powershell user). 
 
 ```sh
 ./docker-iris-fhir/start.sh
@@ -97,8 +100,6 @@ Each of the tutorials are IPython (Jupyter) notebooks. These are notebooks which
 
 
 # Table Of Contents
-
-- [Introduction](./Tutorials/Introduction.md)
 
 ### 0. Key Concepts
 - [0.0 Introduction to InterSystems IRIS](./Tutorials/0-key-concepts/0-what-is-IRIS.md)
