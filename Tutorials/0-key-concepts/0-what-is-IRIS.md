@@ -4,7 +4,7 @@ InterSystems IRIS is a data platform, meaning it is a platform to build applicat
 
 InterSystems IRIS for Health is an extension to InterSystems IRIS, providing additional support for HealthCare data and systems. This includes a FHIR Server, as well as support for HL7, CDA, X12 and many other types. 
 
-All of these features are built with security, concurrency, auditing and support for many users to access the data simultaneously. Making it a powerful platform to build to the worlds most important applications. 
+All of these features are built with security, concurrency, auditing and support for many users to access the data simultaneously. Making it a powerful platform to build the world's most important applications. 
 
 This series uses the Community Edition of InterSystems IRIS for Health, which is free to use and has no major code differences to the licensed version. It does come with [limits on its use](). 
 

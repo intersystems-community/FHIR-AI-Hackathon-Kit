@@ -59,16 +59,16 @@ install dataset-titanic
 
 ## Test/Train Split
 
-**From this point the rest of the tutorial is performed in SQL, this can be run from the Management Portal SQL Editor at: http://localhost:52773/csp/sys/exp/%25CSP.UI.Portal.SQL.Home.zen?$NAMESPACE=USER** 
+**From this point the rest of the tutorial is performed in SQL, this can be run from the Management Portal SQL Editor at: http://localhost:32783/csp/sys/exp/%25CSP.UI.Portal.SQL.Home.zen?$NAMESPACE=USER** 
 
 **However, the SQL can also be performed from any other SQL client, including SQLTools, DBeaver, Python DB-API, ObjectScript etc.**
 
 
-When creating a machine learning model, it is important to validate the predictions against data where you already know the result. Crutially, this test data cannot be present in the original training dataset, because otherwise it would not be a reliable test. Therefore the first step when creating a machine learning model, is splitting the data you are using into **training data** and **testing data**. 
+When creating a machine learning model, it is important to validate the predictions against data where you already know the result. Crucially, this test data cannot be present in the original training dataset, because otherwise it would not be a reliable test. Therefore the first step when creating a machine learning model, is splitting the data you are using into **training data** and **testing data**. 
 
 The proportion of the data split is a parameter that can be optimised, as more training data will create a better informed model, but more testing data will create more robust validation. In general, a good place to start is using approximately 70-80% percent of your data to train the model and 20-30% to test it. 
 
-In our titanic dataset, there are 892 passenger records, so we will take the top 700 records as the testing dataset (78%) and rest as the testing set. Here we create `VIEWS`, which are virtual tables that can be treated like a standard table, but do not duplicate the data.
+In our titanic dataset, there are 892 passenger records, so we will take the top 700 records as the training dataset (78%) and rest as the testing set. Here we create `VIEWS`, which are virtual tables that can be treated like a standard table, but do not duplicate the data.
 
 ```sql
 CREATE VIEW dc_data.TitanicTrain AS
@@ -122,7 +122,7 @@ After performing the validation, we can view the metrics by running:
 ```sql 
 SELECT * FROM INFORMATION_SCHEMA.ML_VALIDATION_METRICS
 ```
-Theres a number of metrics that can measure performance in different ways, for example comparing the number of false positives vs false negatives. 
+There's a number of metrics that can measure performance in different ways, for example comparing the number of false positives vs false negatives. 
 
 ![Validation Results](images/ValidationResults.png)
 
@@ -156,10 +156,10 @@ SELECT *,Survived, PREDICT(TitanicSurvival) AS Prediction, PROBABILITY(TitanicSu
 
 ![Results table showing Prediction and Probability of the prediction](images/ProbabilityResults.png)
 
-This output shows that some the incorrect results had low confidence in the original prediction - for example Passenger 708, Edward Calderhead, was predicted to have a 43% likelihood of survival, and did survive. 
+This output shows that some of the incorrect results had low confidence in the original prediction - for example Passenger 708, Edward Calderhead, was predicted to have a 43% likelihood of survival, and did survive. 
 # Regression
 
-The above example was a binary classification, classifying each datapoint into one of two categories - survived or didn't survive. It is also possible to perform regression, which is predicting a continuous value. Performing a regression is just as easy, you just need to chose a continuous numeric column as the column being predicted. 
+The above example was a binary classification, classifying each datapoint into one of two categories - survived or didn't survive. It is also possible to perform regression, which is predicting a continuous value. Performing a regression is just as easy, you just need to choose a continuous numeric column as the column being predicted. 
 
 Below is an example predicting the price each passenger paid for their ticket in just 3 commands. 
 
@@ -189,7 +189,7 @@ SELECT TOP 10 PassengerId, Fare, PREDICT(FarePrediction) AS PredictedFare FROM d
 
 It is still worth running the model validation in the same way as shown for the classification example. Here, the validation gave a Root Mean Squared Error of 43.90, and a R^2 value of 0.35. This that 70% of the variance in the data is accounted for by the model, which is pretty good. 
 
-The RMSE is high, this is the average difference betwen the predicted values and the actual values. This is a much bigger difference than can be seen in the output above, which may mean we have some major outliers. We can look at outliers by ordering the data by the magnitude of difference between the fare and predicted fare:
+The RMSE is high, this is the average difference between the predicted values and the actual values. This is a much bigger difference than can be seen in the output above, which may mean we have some major outliers. We can look at outliers by ordering the data by the magnitude of difference between the fare and predicted fare:
 
 ```sql
 SELECT TOP 10 PassengerId, Fare, PREDICT(FarePrediction) AS PredictedFare 

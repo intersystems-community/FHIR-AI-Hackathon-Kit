@@ -30,7 +30,7 @@ To break this down:
 - The IRIS Health Community ports 1972 and 52773 have been mapped to the equivalent local ports (`--publish <local>:<container>`).
 - The `output` directory containing the FHIR data has been mounted to the IRIS health container with the `-v $PWD/output:/usr/irissys/output` flag. 
 - `-d` flag detaches the terminal, meaning we can carry on using the same terminal window.
-- `intersystems/irishealth-community` is the docker image being downloaded from [docker hub](https://hub.docker.com/r/intersystems/iris-ml-community)
+- `intersystems/irishealth-community` is the docker image being downloaded from [docker hub](https://hub.docker.com/r/intersystems/irishealth-community)
 
 
 ## Create FHIR Server
@@ -82,7 +82,7 @@ do ##class(HS.FHIRServer.Installer).InstallInstance(fhirServerPath, strategyClas
 
 #### Limit max search results
 
-These lines set limits on the amount of results yielded from a search of our FHIR endpoint. Setting limits is recommended to avoid transfering huge amounts of data.
+These lines set limits on the amount of results yielded from a search of our FHIR endpoint. Setting limits is recommended to avoid transferring huge amounts of data.
 
 ```
 set strategy = ##class(HS.FHIRServer.API.InteractionsStrategy).GetStrategyForEndpoint(fhirServerPath)
@@ -138,8 +138,8 @@ curl -Uri "http://localhost:52773/demo/fhir/Patient" `
     -Headers @{
         Authorization = "Basic $encoded"
         Accept = "application/fhir+json"
-    } 
-    -Method GET 
+    } `
+    -Method GET `
     -OutFile "response.json"
 ```
 
