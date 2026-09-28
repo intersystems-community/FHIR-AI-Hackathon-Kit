@@ -6,7 +6,7 @@ InterSystems IRIS for Health is an extension to InterSystems IRIS, providing add
 
 All of these features are built with security, concurrency, auditing and support for many users to access the data simultaneously. Making it a powerful platform to build the world's most important applications. 
 
-This series uses the Community Edition of InterSystems IRIS for Health, which is free to use and has no major code differences to the licensed version. It does come with [limits on its use](). 
+This series uses the Community Edition of InterSystems IRIS for Health, which is free to use and has no major code differences to the licensed version. It does come with [limits on its use](https://docs.intersystems.com/irislatest/csp/docbook/DocBook.UI.Page.cls?KEY=ACLOUD#ACLOUD_limits). 
 
 
 ## More info 
