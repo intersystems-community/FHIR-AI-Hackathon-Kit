@@ -1,4 +1,4 @@
-"""Tests for Tutorial_V2/2-loading-data/2.2-load-fhir-data.ipynb.
+"""Tests for Tutorials/3-fhir/3.1-load-fhir-data.ipynb.
 
 Layered the same way as the 2.1 tests:
 
@@ -21,7 +21,7 @@ import requests
 from requests.auth import HTTPBasicAuth
 
 from conftest import (
-    NOTEBOOK_2_2,
+    NOTEBOOK_3_1,
     assert_no_cell_errors,
     cell_text,
     code_cells,
@@ -50,12 +50,12 @@ def fhir_get(fhir_config: dict, path: str) -> requests.Response:
 
 
 class TestFhirEndpointAndCredentials:
-    """The FHIR endpoint and credentials written into notebook 2.2 must work."""
+    """The FHIR endpoint and credentials written into notebook 3.1 must work."""
 
     def test_post_and_get_urls_agree(self, fhir_config):
         """The notebook sets `server_url` and `baseURL` separately; they must match."""
         assert fhir_config["server_url"] == fhir_config["base_url"], (
-            "The bundle-upload URL and the resource URL in 2.2 point at different "
+            "The bundle-upload URL and the resource URL in 3.1 point at different "
             f"servers: {fhir_config['server_url']!r} vs {fhir_config['base_url']!r}."
         )
 
@@ -65,7 +65,7 @@ class TestFhirEndpointAndCredentials:
             res = fhir_get(fhir_config, "metadata")
         except requests.RequestException as exc:
             pytest.fail(
-                f"Could not reach the FHIR base URL written in 2.2 "
+                f"Could not reach the FHIR base URL written in 3.1 "
                 f"({fhir_config['base_url']!r}).\n"
                 "Check the container is running and the web server port mapping in "
                 f"docker-iris-fhir/docker-compose.yml.\nError: {exc}"
@@ -80,7 +80,7 @@ class TestFhirEndpointAndCredentials:
         """Catches a changed username/password -- IRIS answers 401 for bad basic auth."""
         res = fhir_get(fhir_config, "metadata")
         assert res.status_code != 401, (
-            f"The FHIR server rejected the credentials written in 2.2 "
+            f"The FHIR server rejected the credentials written in 3.1 "
             f"(username={fhir_config['username']!r}). Update the notebook or the "
             "IRIS user's password."
         )
@@ -135,7 +135,7 @@ class TestNotebookStructure:
         assigned further down the notebook is a genuine defect, not a false
         positive from out-of-order manual execution.
         """
-        nb = read_notebook(NOTEBOOK_2_2)
+        nb = read_notebook(NOTEBOOK_3_1)
         assigned = set(dir(__builtins__)) | {"__builtins__"}
         problems = []
         for index, cell in enumerate(code_cells(nb)):
@@ -158,16 +158,16 @@ class TestNotebookStructure:
 
 @pytest.fixture(scope="module")
 def executed():
-    """Notebook 2.2 executed once, shared by every execution-dependent test."""
+    """Notebook 3.1 executed once, shared by every execution-dependent test."""
     pytest.importorskip(
         "fhir.resources",
-        reason="fhir.resources is required to execute 2.2 (pip install fhir.resources)",
+        reason="fhir.resources is required to execute 3.1 (pip install fhir.resources)",
     )
-    return execute_notebook(NOTEBOOK_2_2)
+    return execute_notebook(NOTEBOOK_3_1)
 
 
 class TestNotebookExecution:
-    """Execute 2.2 end to end and check its outputs against the server."""
+    """Execute 3.1 end to end and check its outputs against the server."""
 
     def test_no_unexpected_cell_raises(self, executed):
         assert_no_cell_errors(executed, allowed_error_cell_ids=DELIBERATE_ERROR_CELL_IDS)

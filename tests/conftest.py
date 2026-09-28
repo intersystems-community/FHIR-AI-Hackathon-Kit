@@ -1,4 +1,4 @@
-"""Shared fixtures and helpers for the Tutorial_V2 notebook tests.
+"""Shared fixtures and helpers for the Tutorials notebook tests.
 
 The tests here execute the tutorial notebooks against a live IRIS instance and
 assert that:
@@ -22,15 +22,20 @@ import nbformat
 import pytest
 from nbclient import NotebookClient
 
-TUTORIAL_ROOT = Path(__file__).resolve().parent.parent
-LOADING_DATA_DIR = TUTORIAL_ROOT / "2-loading-data"
+REPO_ROOT = Path(__file__).resolve().parent.parent
+TUTORIAL_ROOT = REPO_ROOT / "Tutorials"
+DATA_DIR = TUTORIAL_ROOT / "data"
+SETUP_SCRIPTS_DIR = TUTORIAL_ROOT / "setup-scripts"
 
-NOTEBOOK_2_1 = LOADING_DATA_DIR / "2.1-load-csv-data.ipynb"
-NOTEBOOK_2_2 = LOADING_DATA_DIR / "2.2-load-fhir-data.ipynb"
+# The notebooks' load_dotenv() walks up from the notebook folder to this file.
+ENV_FILE = REPO_ROOT / ".env"
 
-AI_DIR = TUTORIAL_ROOT / "4-ai"
-NOTEBOOK_VECTOR_SEARCH = AI_DIR / "vector-search.ipynb"
-NOTEBOOK_AGENTS = AI_DIR / "agents-and-tools.ipynb"
+NOTEBOOK_2_1 = TUTORIAL_ROOT / "2-tabular" / "2.1-load-csv-data.ipynb"
+NOTEBOOK_3_1 = TUTORIAL_ROOT / "3-fhir" / "3.1-load-fhir-data.ipynb"
+
+AI_DIR = TUTORIAL_ROOT / "5-ai"
+NOTEBOOK_VECTOR_SEARCH = TUTORIAL_ROOT / "4-vector-search" / "4.1-vector-search.ipynb"
+NOTEBOOK_AGENTS = AI_DIR / "5.1-agents-and-tools.ipynb"
 VECTOR_TABLE = "Diabetes.VectorStore"
 
 # Cells whose source starts with a pip install are skipped when executing a
@@ -257,7 +262,7 @@ def run_query(connection_args: dict, sql: str, params=()) -> list:
 
     The cursor is closed before the connection: leaving a cursor that fetched a
     long text column open when the connection closes crashes the driver on
-    teardown (see 4-ai/BUG_REPORT.md).
+    teardown (see Tutorials/5-ai/BUG_REPORT.md).
     """
     conn = iris.connect(**connection_args)
     try:
@@ -282,9 +287,9 @@ def nb_2_1_source() -> str:
 
 
 @pytest.fixture(scope="session")
-def nb_2_2_source() -> str:
-    """Unexecuted code source of notebook 2.2."""
-    return notebook_source(read_notebook(NOTEBOOK_2_2))
+def nb_3_1_source() -> str:
+    """Unexecuted code source of notebook 3.1."""
+    return notebook_source(read_notebook(NOTEBOOK_3_1))
 
 
 @pytest.fixture(scope="session")
@@ -294,13 +299,13 @@ def iris_connection_args(nb_2_1_source) -> dict:
 
 
 @pytest.fixture(scope="session")
-def fhir_config(nb_2_2_source) -> dict:
-    """The FHIR base URL and credentials as written in notebook 2.2."""
+def fhir_config(nb_3_1_source) -> dict:
+    """The FHIR base URL and credentials as written in notebook 3.1."""
     return {
-        "server_url": extract_last_str_assignment(nb_2_2_source, "server_url"),
-        "base_url": extract_last_str_assignment(nb_2_2_source, "baseURL"),
-        "username": extract_last_str_assignment(nb_2_2_source, "username"),
-        "password": extract_last_str_assignment(nb_2_2_source, "password"),
+        "server_url": extract_last_str_assignment(nb_3_1_source, "server_url"),
+        "base_url": extract_last_str_assignment(nb_3_1_source, "baseURL"),
+        "username": extract_last_str_assignment(nb_3_1_source, "username"),
+        "password": extract_last_str_assignment(nb_3_1_source, "password"),
     }
 
 

@@ -1,4 +1,4 @@
-"""Tests for Tutorial_V2/2-loading-data/2.1-load-csv-data.ipynb.
+"""Tests for Tutorials/2-tabular/2.1-load-csv-data.ipynb.
 
 Three layers, cheapest first:
 
@@ -16,7 +16,7 @@ import pandas as pd
 import pytest
 
 from conftest import (
-    LOADING_DATA_DIR,
+    DATA_DIR,
     NOTEBOOK_2_1,
     cell_text,
     assert_no_cell_errors,
@@ -25,8 +25,8 @@ from conftest import (
     read_notebook,
 )
 
-SUPERHEROS_CSV = LOADING_DATA_DIR / "data" / "csv" / "superheros.csv"
-HEALTHCARE_CSV = LOADING_DATA_DIR / "data" / "csv" / "healthcare_dataset.csv"
+SUPERHEROS_CSV = DATA_DIR / "csv" / "superheros.csv"
+HEALTHCARE_CSV = DATA_DIR / "csv" / "healthcare_dataset.csv"
 
 # Tables the notebook creates. Dropped before execution so the notebook's bare
 # CREATE TABLE statements (which have no IF NOT EXISTS guard) succeed.

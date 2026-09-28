@@ -76,6 +76,12 @@ Then install dependencies:
 pip install -r requirements.txt
 ```
 
+Finally, copy [.env.example](./.env.example) to a file called `.env` in the root of this repository and replace the placeholder with your OpenAI API key. All the tutorials and scripts that call OpenAI read the key from this file.
+
+```sh
+cp .env.example .env
+```
+
 ## Tutorial Series Overview
 
 This tutorial series spans 3 main data-types: 
@@ -85,7 +91,7 @@ This tutorial series spans 3 main data-types:
 
 For CSV and FHIR data, there are separate tutorials to cover the loading of data into InterSystems IRIS, and the querying of this data. For Vector data, this is combined into a single tutorial on vector search. 
 
-Following the data loading there are also tutorials on using AI Agents and creating MCP servers around our data access. These later tutorials make use of the data created in earlier tutorials, so you should either run through the earlier tutorials, or run the Python table Setup scripts which perform the same steps. 
+Following the data loading there are also tutorials on using AI Agents and creating MCP servers around our data access. These later tutorials make use of the data created in earlier tutorials, so you should either run through the earlier tutorials, or run the Python table [setup scripts](./Tutorials/setup-scripts/) which perform the same steps. 
 
 Each of the tutorials are IPython (Jupyter) notebooks. These are notebooks which use a continuous Python kernel with executable "cells" containing code. The variables created in this notebook stay in memory, meaning the tutorial can be run interactively, with instructions in-line with code. 
 
@@ -103,22 +109,24 @@ Each of the tutorials are IPython (Jupyter) notebooks. These are notebooks which
 ### 1. Setup
 - [1.1 Setting Up the Environment](./Tutorials/1-setup/1.1-setup-iris-and-fhir.md)
 
-### 2. Loading Data
-- [2.1 Load CSV Data to InterSystems IRIS with Python](./Tutorials/2-loading-data/2.1-load-csv-data.ipynb)
-- [2.2 Adding FHIR data to a FHIR server](./Tutorials/2-loading-data/2.2-load-fhir-data.ipynb)
-- [2.3 Vector Search](./Tutorials/2-loading-data/2.3-vector-search.ipynb)
+### 2. Tabular Data
+- [2.1 Load CSV Data to InterSystems IRIS with Python](./Tutorials/2-tabular/2.1-load-csv-data.ipynb)
+- [2.2 Querying SQL Data with Python](./Tutorials/2-tabular/2.2-querying-sql-tables-with-python.ipynb)
 
-### 3. Querying Data
-- [3.1 Querying SQL Data with Python](./Tutorials/3-querying-data/3.1-querying-sql-tables-with-python.ipynb)
-- [3.2 Accessing FHIR resources](./Tutorials/3-querying-data/3.2-querying-fhir-data-with-python.ipynb)
-- [3.3 Viewing the FHIR Specification with Swagger](./Tutorials/3-querying-data/3.3-viewing-fhir-specification-with-swagger.md)
+### 3. FHIR Data
+- [3.1 Adding FHIR data to a FHIR server](./Tutorials/3-fhir/3.1-load-fhir-data.ipynb)
+- [3.2 Accessing FHIR resources](./Tutorials/3-fhir/3.2-querying-fhir-data-with-python.ipynb)
+- [3.3 Viewing the FHIR Specification with Swagger](./Tutorials/3-fhir/3.3-viewing-fhir-specification-with-swagger.md)
 
-### 4. AI
-- [4.1 Creating agents](./Tutorials/4-ai/4.1-agents-and-tools.ipynb)
-- [4.2 Building MCP Servers](./Tutorials/4-ai/4.2-mcp-server.ipynb)
+### 4. Vector Search
+- [4.1 Vector Search](./Tutorials/4-vector-search/4.1-vector-search.ipynb)
 
-### 5. Extras
-- [Create a FHIR Server in 5 minutes with IRIS Health Community](./Tutorials/5-extras/CreateAFHIRServerIn5Minutes.md)
-- [Creating Synthetic FHIR data](./Tutorials/5-extras/create-synthetic-fhir-data.md)
-- [Integrated Machine Learning Quickstart](./Tutorials/5-extras/ML-predictions-made-simple.md)
+### 5. AI
+- [5.1 Creating agents](./Tutorials/5-ai/5.1-agents-and-tools.ipynb)
+- [5.2 Building MCP Servers](./Tutorials/5-ai/5.2-mcp-server.ipynb)
+
+### 6. Extras
+- [Create a FHIR Server in 5 minutes with IRIS Health Community](./Tutorials/6-extras/CreateAFHIRServerIn5Minutes.md)
+- [Creating Synthetic FHIR data](./Tutorials/6-extras/create-synthetic-fhir-data.md)
+- [Integrated Machine Learning Quickstart](./Tutorials/6-extras/ML-predictions-made-simple.md)
 

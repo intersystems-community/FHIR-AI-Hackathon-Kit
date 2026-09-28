@@ -13,7 +13,7 @@ from openai import OpenAI
 from dotenv import load_dotenv
 from fastmcp import FastMCP
 
-load_dotenv(Path(__file__).parent.parent / ".env") # Read .env from parent directory
+load_dotenv(Path(__file__).resolve().parents[3] / ".env") # Read .env from the repository root
 
 CONNECTION_ARGS = {
     "hostname": "localhost",

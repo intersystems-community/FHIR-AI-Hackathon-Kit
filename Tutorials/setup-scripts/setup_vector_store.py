@@ -1,12 +1,18 @@
 """
-Skip-setup script for the vector-search.ipynb tutorial.
+Skip-setup script for the 4-vector-search/4.1-vector-search.ipynb tutorial.
 
 Run this once to recreate the Diabetes.VectorStore table and populate it
 with both the sample diabetes texts and the PDF papers, so you can jump
 straight to the "Search" section of the notebook without re-running setup.
+
+Needs OPENAI_API_KEY in the .env file at the repository root.
+
+Usage (from any directory):
+    python setup_vector_store.py
 """
 
 import os
+from pathlib import Path
 
 import iris
 import pymupdf
@@ -95,14 +101,17 @@ for i, text in enumerate(diabetes_texts):
 
 conn.close()
 
-pdfs = ["papers/" + x for x in os.listdir("papers") if x[-4:] == ".pdf"]
+PAPERS_DIR = Path(__file__).resolve().parent.parent / "data" / "papers"
+pdfs = [x for x in os.listdir(PAPERS_DIR) if x[-4:] == ".pdf"]
 print(f"Embedding and inserting chunks from {len(pdfs)} PDFs: {pdfs}")
 
 conn = iris.connect(**connection_args)
 cursor = conn.cursor()
 
 for pdf in pdfs:
-    doc_path, chunks = get_chunks(pdf)
+    _, chunks = get_chunks(str(PAPERS_DIR / pdf))
+    # Store the same Source value the notebook does (its path relative to 4-vector-search/)
+    doc_path = "../data/papers/" + pdf
     print(f"  {doc_path}: {len(chunks)} chunks")
 
     for i, chunk in enumerate(chunks):

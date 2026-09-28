@@ -1,5 +1,5 @@
 """
-Skip-setup script for the 2.1-load-csv-data.ipynb tutorial.
+Skip-setup script for the 2-tabular/2.1-load-csv-data.ipynb tutorial.
 
 Run this once to recreate the tables the tutorial builds, so you can jump
 straight to the querying tutorials without working through 2.1:
@@ -29,7 +29,7 @@ connection_args = {
     "password": "SYS",
 }
 
-CSV_DIR = Path(__file__).parent / "data" / "csv"
+CSV_DIR = Path(__file__).resolve().parent.parent / "data" / "csv"
 SUPERHEROS_CSV = CSV_DIR / "superheros.csv"
 HEALTHCARE_CSV = CSV_DIR / "healthcare_dataset.csv"
 

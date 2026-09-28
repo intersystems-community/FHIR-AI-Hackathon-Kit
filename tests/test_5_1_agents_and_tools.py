@@ -1,4 +1,4 @@
-"""Tests for Tutorial_V2/4-ai/agents-and-tools.ipynb.
+"""Tests for Tutorials/5-ai/5.1-agents-and-tools.ipynb.
 
 The notebook gives an LLM agent three tools that read data loaded by earlier
 tutorials, so on top of the usual layers there is a prerequisites layer:
@@ -8,8 +8,8 @@ tutorials, so on top of the usual layers there is a prerequisites layer:
 * `TestNotebookStructure` -- dependencies, the OpenAI key, and the
   deterministic base64 helpers.
 * `TestPrerequisiteData` -- the data each tool reads exists: `Sample.Person`
-  (from 2.1), `Diabetes.VectorStore` (from vector-search.ipynb) and the Synthea
-  patient Tish Lemke with a body height Observation (from 2.2). `Sample.Person`
+  (from 2.1), `Diabetes.VectorStore` (from 4.1-vector-search.ipynb) and the Synthea
+  patient Tish Lemke with a body height Observation (from 3.1). `Sample.Person`
   is rebuilt by 2.1's `setup_csv_data.py` before this module runs; for the
   others, a failure here means an earlier notebook needs running, not that this
   one is broken.
@@ -30,8 +30,8 @@ from dotenv import dotenv_values
 from requests.auth import HTTPBasicAuth
 
 from conftest import (
-    AI_DIR,
-    LOADING_DATA_DIR,
+    ENV_FILE,
+    SETUP_SCRIPTS_DIR,
     NOTEBOOK_AGENTS,
     VECTOR_TABLE,
     assert_no_cell_errors,
@@ -55,7 +55,7 @@ SPIDERMAN_LAST_NAME = "Parker"
 
 # Skip-setup script that recreates the tables 2.1 builds. test_2_1 drops those
 # tables when it finishes, so this module rebuilds them before reading them.
-SETUP_CSV_DATA_SCRIPT = LOADING_DATA_DIR / "setup_csv_data.py"
+SETUP_CSV_DATA_SCRIPT = SETUP_SCRIPTS_DIR / "setup_csv_data.py"
 
 
 @pytest.fixture(scope="module", autouse=True)
@@ -184,7 +184,7 @@ class TestNotebookStructure:
         pytest.importorskip("dotenv", reason="pip install python-dotenv")
 
     def test_openai_api_key_is_configured(self):
-        env_file = AI_DIR / ".env"
+        env_file = ENV_FILE
         assert env_file.exists(), (
             f"{env_file} does not exist. The notebook loads OPENAI_API_KEY from it."
         )
@@ -206,7 +206,7 @@ class TestPrerequisiteData:
             ages = parker_ages(connection_args)
         except Exception as exc:
             pytest.fail(
-                "Could not read Sample.Person. Run 2-loading-data/2.1-load-csv-data.ipynb "
+                "Could not read Sample.Person. Run 2-tabular/2.1-load-csv-data.ipynb "
                 f"first; the search_superheros tool reads it.\nError: {exc}"
             )
         assert ages, (
@@ -219,8 +219,8 @@ class TestPrerequisiteData:
             rows = run_query(connection_args, f"SELECT COUNT(*) FROM {VECTOR_TABLE}")
         except Exception as exc:
             pytest.fail(
-                f"Could not read {VECTOR_TABLE}. Run 4-ai/vector-search.ipynb (or "
-                f"4-ai/setup_vector_store.py) first.\nError: {exc}"
+                f"Could not read {VECTOR_TABLE}. Run 4-vector-search/4.1-vector-search.ipynb (or "
+                f"setup-scripts/setup_vector_store.py) first.\nError: {exc}"
             )
         assert rows[0][0] > 0, f"{VECTOR_TABLE} is empty."
 
@@ -230,7 +230,7 @@ class TestPrerequisiteData:
         except ValueError as exc:
             pytest.fail(
                 "The 'How tall is Tish Lemke?' prompt needs the Synthea data from "
-                f"2-loading-data/2.2-load-fhir-data.ipynb.\n{exc}"
+                f"3-fhir/3.1-load-fhir-data.ipynb.\n{exc}"
             )
         assert height > 0
 
@@ -240,10 +240,10 @@ class TestToolsDirectly:
 
     @pytest.fixture(autouse=True)
     def notebook_env(self, monkeypatch):
-        # The cells' load_dotenv() finds 4-ai/.env when run in the notebook, but
-        # under exec it searches from this test file's directory instead. Load
-        # the notebook's .env explicitly so the tools see the same key.
-        monkeypatch.setenv("OPENAI_API_KEY", dotenv_values(AI_DIR / ".env")["OPENAI_API_KEY"])
+        # The cells' load_dotenv() finds the root .env by walking up from the
+        # notebook's directory; under exec it walks up from this test file instead.
+        # Load the root .env explicitly so the tools see the same key either way.
+        monkeypatch.setenv("OPENAI_API_KEY", dotenv_values(ENV_FILE)["OPENAI_API_KEY"])
 
     def test_search_superheros_returns_name_and_age_rows(self):
         rows = cell_namespace("def search_superheros")["search_superheros"]()

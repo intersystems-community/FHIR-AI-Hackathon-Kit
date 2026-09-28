@@ -1,4 +1,4 @@
-"""Tests for Tutorial_V2/4-ai/vector-search.ipynb.
+"""Tests for Tutorials/4-vector-search/4.1-vector-search.ipynb.
 
 Layered like the 2.x tests, cheapest first:
 
@@ -25,7 +25,8 @@ import pytest
 from dotenv import dotenv_values
 
 from conftest import (
-    AI_DIR,
+    DATA_DIR,
+    ENV_FILE,
     NOTEBOOK_VECTOR_SEARCH,
     VECTOR_TABLE,
     assert_no_cell_errors,
@@ -37,7 +38,7 @@ from conftest import (
     run_query,
 )
 
-PAPERS_DIR = AI_DIR / "papers"
+PAPERS_DIR = DATA_DIR / "papers"
 RAW_TEXT_SOURCE = "Raw_text"
 
 # Documented dimension of OpenAI's text-embedding-3-small.
@@ -46,8 +47,8 @@ EMBEDDING_DIMENSIONS = 1536
 
 
 def notebook_pdf_paths() -> list:
-    """The PDF paths exactly as the notebook builds them (relative to 4-ai/)."""
-    return ["papers/" + name for name in os.listdir(PAPERS_DIR) if name[-4:] == ".pdf"]
+    """The PDF paths exactly as the notebook builds them (relative to 4-vector-search/)."""
+    return ["../data/papers/" + name for name in os.listdir(PAPERS_DIR) if name[-4:] == ".pdf"]
 
 
 @pytest.fixture(scope="module")
@@ -109,8 +110,8 @@ class TestNotebookStructure:
         pytest.importorskip("dotenv", reason="python-dotenv is not installed")
 
     def test_openai_api_key_is_configured(self):
-        """The notebook calls load_dotenv() from 4-ai/, so the key must be in 4-ai/.env."""
-        env_file = AI_DIR / ".env"
+        """The notebook's load_dotenv() walks up to the repository root, so the key must be in the root .env."""
+        env_file = ENV_FILE
         assert env_file.exists(), (
             f"{env_file} does not exist. The notebook loads OPENAI_API_KEY from it."
         )
@@ -126,7 +127,7 @@ class TestNotebookStructure:
         """A scanned/empty PDF would produce zero chunks and silently add nothing."""
         empty = []
         for pdf in notebook_pdf_paths():
-            _, chunks = get_chunks(str(AI_DIR / pdf))
+            _, chunks = get_chunks(str(NOTEBOOK_VECTOR_SEARCH.parent / pdf))
             if not chunks:
                 empty.append(pdf)
         assert not empty, f"These PDFs produced no text chunks: {empty}"
@@ -193,14 +194,14 @@ class TestNotebookExecution:
     def test_sweat_glucose_query_cites_glucose_sensing_paper(self, executed):
         cell = find_cell(executed, "sweat of healthy patients")
         text = cell_text(cell)
-        assert "Source: papers/GlucoseSensingForDiabetesMonitoring.pdf" in text, (
+        assert "Source: ../data/papers/GlucoseSensingForDiabetesMonitoring.pdf" in text, (
             f"Expected the glucose sensing paper as the source. Got:\n{text[:1500]}"
         )
 
     def test_combination_therapy_query_cites_multi_target_drugs_paper(self, executed):
         cell = find_cell(executed, "combination therapy")
         text = cell_text(cell)
-        assert "Source: papers/Type2DiabetesMellitusReviewOfMultiTargetDrugs.pdf" in text, (
+        assert "Source: ../data/papers/Type2DiabetesMellitusReviewOfMultiTargetDrugs.pdf" in text, (
             f"Expected the multi-target drugs review as the source. Got:\n{text[:1500]}"
         )
 
@@ -245,7 +246,7 @@ class TestVectorStoreContents:
         """Row count per PDF must equal the number of chunks get_chunks makes for it."""
         wrong = {}
         for pdf in notebook_pdf_paths():
-            _, chunks = get_chunks(str(AI_DIR / pdf))
+            _, chunks = get_chunks(str(NOTEBOOK_VECTOR_SEARCH.parent / pdf))
             # A source absent from the GROUP BY genuinely has zero rows.
             stored = rows_per_source.get(pdf, 0)
             if stored != len(chunks):

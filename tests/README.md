@@ -1,6 +1,6 @@
 # Notebook tests
 
-Tests that execute the Tutorial_V2 notebooks against a live IRIS instance and
+Tests that execute the Tutorials notebooks against a live IRIS instance and
 assert they produce roughly the documented output without erroring.
 
 Their main job is to catch drift: if a port mapping in
@@ -14,8 +14,12 @@ reported against the notebook rather than discovered by a user.
 
 Start the IRIS container first (`docker-iris-fhir/start.sh` or `start.ps1`), then:
 
-    cd Tutorial_V2/tests
+    cd tests
     python -m pytest
+
+Test modules are named after the notebook they cover (`test_3_1_...` tests
+`Tutorials/3-fhir/3.1-...`), so they run in tutorial order. `test_4_1` and
+`test_5_1` call OpenAI and need `OPENAI_API_KEY` in the repository-root `.env`.
 
 Requirements: `pytest`, `nbformat`, `nbclient`, `ipykernel`, plus the notebooks'
 own dependencies (`intersystems-irispython`, `pandas`, `requests`,
@@ -42,7 +46,7 @@ Each module has three groups of tests, cheapest first:
 
 ## Deliberate errors
 
-`2.2` teaches FHIR server-side validation by POSTing a `DocumentReference` with
+`3.1` teaches FHIR server-side validation by POSTing a `DocumentReference` with
 a malformed subject reference, seeing a 400, then fixing it. The
 400 is asserted as the expected outcome. One cell (`cb56dc36-...`) deliberately
 raises by calling `.json()` on an empty 201 body; its id is listed in
