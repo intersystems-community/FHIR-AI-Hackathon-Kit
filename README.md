@@ -11,8 +11,6 @@ V2 features more standalone tutorials on using InterSystems IRIS for Health with
 
 This re-write was driven by the desire to cover more up-to-date features in the Agentic AI world, as well as a desire to replace extremely computationally heavy, slow and ineffective local AI Models with fast and cheap OpenAI models. 
 
-
-
 ## What this tutorial series is
 
 This is a series of interactive tutorials on building applications using **Python** and **InterSystems IRIS For Health** server as the backend data platform. There is a docker template which sets up InterSystems IRIS For Health with a **FHIR server**. This is followed by a series of tutorials on how to access or add data to the FHIR Server or to the SQL database from Python Application. 
@@ -27,7 +25,7 @@ These tutorials are designed to be a rapid quickstart for you to include InterSy
 
 This series is not an in-depth look at InterSystems IRIS. The inner workings of InterSystems IRIS are extensive and powerful. There are industry-leading features for integrating healthcare systems and transforming data that are not touched upon in this series. There is also a suite for creating analytics dashboards directly on the data being used. 
 
-In-depth programming with all of the features InterSystems IRIS provides benefits from knowledge of InterSystems IRIS Classes and some knowledge of ObjectScript. However, there are still many valuable aspects of InterSystems IRIS that can be accessed through external applications as shown here. 
+In-depth programming with all of the features of InterSystems IRIS benefits from knowledge of InterSystems IRIS Classes and some knowledge of ObjectScript. However, there are still many valuable aspects of InterSystems IRIS that can be accessed through external applications as shown here. 
 
 If you are interested in going into depth with InterSystems IRIS, there are many learning courses available on the [InterSystems Learning Services platform](https://learning.intersystems.com). It's a steep learning curve, but highly fulfilling and provides access to an incredibly powerful data platform. 
 
@@ -35,7 +33,6 @@ AI coding agents are also able to flatten this learning curve, so if you do need
 
 
 ## Setup
-
 
 ### Pre-requisites
 
