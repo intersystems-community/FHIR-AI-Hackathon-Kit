@@ -27,9 +27,11 @@ RUN mkdir /opt/fhir && \
 USER irisowner
 
 COPY ./data/fhir /opt/fhir/data/
+COPY ./src/swagger-ui /opt/fhir/swagger-ui/
 
 
 RUN iris start IRIS &&\
     iris merge IRIS merge.cpf && \
+    echo 'do ##class(Security.Users).UnExpireUserPasswords("*")' | iris session IRIS -U %SYS && \
     iris stop IRIS quietly
 

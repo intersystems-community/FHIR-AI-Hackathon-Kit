@@ -63,6 +63,40 @@ class FHIRServerSetup:
             conn.close()
 
 
+def setup_swagger_app(path="/opt/fhir/swagger-ui", name="/fhir/swagger-ui"):
+    # path is a path inside the IRIS container; files must already be there (copy is not done over the native API)
+    conn, irispy = connect("%SYS")
+    try:
+        app_ref = iris.IRISReference(None)
+        sc_ref = iris.IRISReference(None)
+        exists = irispy.classMethodBoolean("Security.Applications", "Exists", name, app_ref, sc_ref)
+        if exists:
+            print(f"{name} application already exists, skipping...")
+            return
+
+        props = {
+            "Type": 2,
+            "NameSpace": "USER",
+            "Path": path,
+            "ServeFiles": 1,
+            "ServeFilesTimeout": 3600,
+            "AutheEnabled": 64,
+            "Enabled": 1,
+        }
+        # Create() takes a subscripted ByRef array, which IRISReference cannot express, so build the object and save it
+        app = irispy.classMethodObject("Security.Applications", "%New")
+        app.set("Name", name)
+        for key, value in props.items():
+            app.set(key, value)
+        sc = app.invoke("%Save")
+        if not irispy.classMethodBoolean("%SYSTEM.Status", "IsOK", sc):
+            raise RuntimeError(irispy.classMethodString("%SYSTEM.Status", "GetErrorText", sc))
+        print(f"Created {name} application")
+    finally:
+        conn.close()
+
+
 if __name__ == "__main__":
-    fhir_setup = FHIRServerSetup("FHIRSERVER", "/fhir/r4", "/tmp/fhir")
+    fhir_setup = FHIRServerSetup("FHIRSERVER", "/fhir/r4", "/opt/fhir/data")
     fhir_setup.install()
+    setup_swagger_app()
