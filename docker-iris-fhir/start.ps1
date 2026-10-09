@@ -40,7 +40,24 @@ if (-not $Python) {
     exit 1
 }
 
-& $Python "$ScriptDir\fhir_server_setup_native.py"
+# The setup script needs the intersystems-irispython package, so run it from the repo's .venv
+# (the same one the tutorials use), creating it if needed.
+$Venv = Join-Path $ScriptDir "..\.venv"
+if (-not (Test-Path $Venv)) {
+    & $Python -m venv $Venv
+    if ($LASTEXITCODE -ne 0) {
+        Write-Error "Creating virtual environment failed (exit $LASTEXITCODE)"
+        exit 1
+    }
+}
+$VenvPython = Join-Path $Venv "Scripts\python.exe"
+& $VenvPython -m pip install -q intersystems-irispython
+if ($LASTEXITCODE -ne 0) {
+    Write-Error "pip install intersystems-irispython failed (exit $LASTEXITCODE)"
+    exit 1
+}
+
+& $VenvPython "$ScriptDir\fhir_server_setup_native.py"
 if ($LASTEXITCODE -ne 0) {
     Write-Error "fhir_server_setup_native.py failed (exit $LASTEXITCODE)"
     exit 1

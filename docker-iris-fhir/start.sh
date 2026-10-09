@@ -35,4 +35,11 @@ if [ -z "${PYTHON:-}" ]; then
   exit 1
 fi
 
-"$PYTHON" "$SCRIPT_DIR/fhir_server_setup_native.py"
+# The setup script needs the intersystems-irispython package, so run it from the repo's .venv
+# (the same one the tutorials use), creating it if needed.
+VENV="$SCRIPT_DIR/../.venv"
+[ -d "$VENV" ] || "$PYTHON" -m venv "$VENV"
+if [ -f "$VENV/Scripts/python.exe" ]; then VENV_PYTHON="$VENV/Scripts/python.exe"; else VENV_PYTHON="$VENV/bin/python"; fi
+"$VENV_PYTHON" -m pip install -q intersystems-irispython
+
+"$VENV_PYTHON" "$SCRIPT_DIR/fhir_server_setup_native.py"

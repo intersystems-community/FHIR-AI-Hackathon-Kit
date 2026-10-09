@@ -51,10 +51,11 @@ Docker must be installed and running. From the root of this repository:
 
 ```sh
 # 1. Start InterSystems IRIS for Health with a FHIR server (use start.ps1 in PowerShell)
+#    This also creates the .venv virtual environment (if it does not exist yet)
+#    and installs intersystems-irispython package
 ./docker-iris-fhir/start.sh
 
-# 2. Create and activate a virtual environment
-python -m venv .venv
+# 2. Activate the virtual environment
 source .venv/bin/activate        # Git Bash: source .venv/Scripts/activate | PowerShell: .venv\Scripts\Activate.ps1
 
 # 3. Install dependencies
