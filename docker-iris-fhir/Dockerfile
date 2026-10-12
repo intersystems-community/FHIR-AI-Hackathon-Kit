@@ -26,7 +26,6 @@ RUN mkdir /opt/fhir && \
 
 USER irisowner
 
-COPY ./data/fhir /opt/fhir/data/
 COPY ./src/swagger-ui /opt/fhir/swagger-ui/
 
 
