@@ -6,8 +6,8 @@ import iris
 
 
 HOST = "localhost"
-PORT = 32782
-WEB_PORT = 32783
+PORT = 1972
+WEB_PORT = 52773
 # Host-side copy of the bundles, POSTed to the FHIR endpoint
 HTTP_DATA_DIR = Path(__file__).parent / "data" / "fhir"
 USER = "superuser"

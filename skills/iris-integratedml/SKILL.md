@@ -18,7 +18,7 @@ Optional sample data via IPM (inside `docker exec -it iris-fhir iris session iri
 
 ## Workflow
 
-All steps are SQL; run from the Management Portal SQL editor (`http://localhost:32783/csp/sys/exp/%25CSP.UI.Portal.SQL.Home.zen?$NAMESPACE=USER`) or via Python DB-API (`iris-sql-python` skill, set the right namespace).
+All steps are SQL; run from the Management Portal SQL editor (`http://localhost:52773/csp/sys/exp/%25CSP.UI.Portal.SQL.Home.zen?$NAMESPACE=USER`) or via Python DB-API (`iris-sql-python` skill, set the right namespace).
 
 ```sql
 -- 1. Split train/test (views do not copy data). Make ranges cover every row exactly once.

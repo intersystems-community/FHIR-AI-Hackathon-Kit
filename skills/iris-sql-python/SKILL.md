@@ -16,7 +16,7 @@ import iris
 
 connection_args = {
     "hostname": "localhost",
-    "port": 32782,
+    "port": 1972,
     "namespace": "FHIRSERVER",
     "username": "SuperUser",
     "password": "SYS",

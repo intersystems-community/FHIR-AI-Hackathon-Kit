@@ -12,17 +12,17 @@ Source tutorials: `Tutorials/1-setup/1.1-setup-iris-and-fhir.md`, `Tutorials/6-e
 | Thing | Value |
 |---|---|
 | Container name / compose service | `iris-fhir` / `iris` |
-| Superserver (Python `iris` driver, SQL) | host `localhost`, port `32782` (container 1972) |
-| Web server (FHIR REST, portal, Swagger) | `http://localhost:32783` (container 52773) |
+| Superserver (Python `iris` driver, SQL) | host `localhost`, port `1972` (same as container) |
+| Web server (FHIR REST, portal, Swagger) | `http://localhost:52773` (same as container) |
 | Credentials | `SuperUser` / `SYS` (dev only) |
 | Namespace for tutorial data + FHIR | `FHIRSERVER` |
-| FHIR base URL | `http://localhost:32783/fhir/r4` |
-| FHIR capability statement | `http://localhost:32783/fhir/r4/metadata` |
-| Management Portal | `http://localhost:32783/csp/sys/UtilHome.csp` |
-| SQL explorer (FHIRSERVER) | `http://localhost:32783/csp/sys/exp/%25CSP.UI.Portal.SQL.Home.zen?$NAMESPACE=FHIRSERVER` |
-| Swagger UI | `http://localhost:32783/fhir/swagger-ui/index.html` |
+| FHIR base URL | `http://localhost:52773/fhir/r4` |
+| FHIR capability statement | `http://localhost:52773/fhir/r4/metadata` |
+| Management Portal | `http://localhost:52773/csp/sys/UtilHome.csp` |
+| SQL explorer (FHIRSERVER) | `http://localhost:52773/csp/sys/exp/%25CSP.UI.Portal.SQL.Home.zen?$NAMESPACE=FHIRSERVER` |
+| Swagger UI | `http://localhost:52773/fhir/swagger-ui/index.html` |
 
-Default IRIS ports 1972/52773 are NOT used on the host. Only the standalone container from `CreateAFHIRServerIn5Minutes.md` uses them.
+Default IRIS ports 1972/52773 are mapped straight through to the host. The standalone container from `CreateAFHIRServerIn5Minutes.md` publishes the same ports, so stop one before starting the other.
 
 ## Lifecycle
 
@@ -34,7 +34,7 @@ docker compose -f docker-iris-fhir/docker-compose.yml down -v   # full wipe incl
 
 - `start.sh` builds the image, waits for IRIS, then runs `fhir_server_setup.py` inside the container (creates FHIR server, bulk-loads Synthea bundles from `docker-iris-fhir/data/fhir`). First start is slow (minutes).
 - Data lives in named volume `iris-data`, so it survives restarts. Re-running `start.sh` on an existing volume re-POSTs the bundles and duplicates patients. Wipe with `down -v` for a clean state.
-- Readiness check: `docker ps` shows `(healthy)`; `curl -u SuperUser:SYS http://localhost:32783/fhir/r4/metadata` returns 200.
+- Readiness check: `docker ps` shows `(healthy)`; `curl -u SuperUser:SYS http://localhost:52773/fhir/r4/metadata` returns 200.
 
 ## Shells inside the container
 
@@ -68,7 +68,7 @@ python Tutorials/setup-scripts/setup_vector_store.py  # Diabetes.VectorStore fro
 
 | Symptom | Cause / fix |
 |---|---|
-| Connection refused on 1972 / 52773 | Wrong port. Use 32782 / 32783. |
+| Connection refused on 1972 / 52773 | Container not running or not healthy (`docker ps`). Superserver is 1972, web is 52773; do not swap them. |
 | License / connection limit errors | Community Edition caps connections. Close cursors and connections (`cursor.close(); conn.close()`), restart the Jupyter kernel holding stale ones. Failing this, restart the container with `docker restart iris-fhir`  |
 | HTTP 401 from FHIR | Missing Basic auth. HTTP 403 = authenticated but not permitted. |
 | `Table 'SAMPLE.PERSON' not found` (SQLCODE -30) | Table not created yet or wrong namespace. Run the skip-setup script, confirm namespace `FHIRSERVER`. |

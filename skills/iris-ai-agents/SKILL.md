@@ -17,7 +17,7 @@ The model sees the function name, type hints and docstring. Make docstrings say 
 import iris, requests
 from requests.auth import HTTPBasicAuth
 
-CONNECTION_ARGS = {"hostname": "localhost", "port": 32782, "namespace": "FHIRSERVER",
+CONNECTION_ARGS = {"hostname": "localhost", "port": 1972, "namespace": "FHIRSERVER",
                    "username": "SuperUser", "password": "SYS"}
 
 def search_superheros() -> list:
@@ -33,7 +33,7 @@ def search_superheros() -> list:
 
 def fhir_query(endpoint: str, search_params: str) -> str:
     """Query the FHIR R4 server: GET /<endpoint>?<search_params>. Returns the FHIR JSON bundle as text."""
-    url = "http://localhost:32783/fhir/r4/" + endpoint + "?" + search_params
+    url = "http://localhost:52773/fhir/r4/" + endpoint + "?" + search_params
     res = requests.get(url, headers={"Accept": "application/fhir+json"},
                        auth=HTTPBasicAuth("SuperUser", "SYS"))
     res.raise_for_status()

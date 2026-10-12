@@ -59,7 +59,7 @@ install dataset-titanic
 
 ## Test/Train Split
 
-**From this point the rest of the tutorial is performed in SQL, this can be run from the Management Portal SQL Editor at: http://localhost:32783/csp/sys/exp/%25CSP.UI.Portal.SQL.Home.zen?$NAMESPACE=USER** 
+**From this point the rest of the tutorial is performed in SQL, this can be run from the Management Portal SQL Editor at: http://localhost:52773/csp/sys/exp/%25CSP.UI.Portal.SQL.Home.zen?$NAMESPACE=USER** 
 
 **However, the SQL can also be performed from any other SQL client, including SQLTools, DBeaver, Python DB-API, ObjectScript etc.**
 

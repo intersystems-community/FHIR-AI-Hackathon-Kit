@@ -17,7 +17,7 @@ load_dotenv(Path(__file__).resolve().parents[3] / ".env") # Read .env from the r
 
 CONNECTION_ARGS = {
     "hostname": "localhost",
-    "port": 32782,
+    "port": 1972,
     "namespace": "FHIRSERVER",
     "username": "SuperUser",
     "password": "SYS",

@@ -55747,7 +55747,7 @@
     "title": "InterSystems IRIS FHIR Server Swagger API, R4",
     "version": "unspecified"
   },
-  "host": "localhost:32783",
+  "host": "localhost:52773",
   "schemes": [
     "http"
   ],

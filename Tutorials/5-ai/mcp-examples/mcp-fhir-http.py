@@ -21,7 +21,7 @@ def fhir_query(endpoint:str, search_params:str ) -> str:
     password = "SYS"
     
     ## FHIR server location
-    base_url = "http://localhost:32783/fhir/r4/"
+    base_url = "http://localhost:52773/fhir/r4/"
     
     headers ={    "Accept": "application/fhir+json"}
 

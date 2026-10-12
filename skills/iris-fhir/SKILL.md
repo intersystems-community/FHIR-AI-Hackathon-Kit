@@ -7,7 +7,7 @@ description: Load, create, validate and query FHIR R4 data on the InterSystems I
 
 Source tutorials: `Tutorials/3-fhir/3.1-load-fhir-data.ipynb`, `3.2-querying-fhir-data-with-python.ipynb`, `3.3-viewing-fhir-specification-with-swagger.md`, `3.4-create-synthetic-fhir-data.md`.
 
-Base URL `http://localhost:32783/fhir/r4/`, Basic auth `SuperUser` / `SYS`, namespace `FHIRSERVER`. Swagger UI (pre-authenticated) at `http://localhost:32783/fhir/swagger-ui/index.html` is the fastest way to try an endpoint by hand.
+Base URL `http://localhost:52773/fhir/r4/`, Basic auth `SuperUser` / `SYS`, namespace `FHIRSERVER`. Swagger UI (pre-authenticated) at `http://localhost:52773/fhir/swagger-ui/index.html` is the fastest way to try an endpoint by hand.
 
 ## Common setup
 
@@ -15,7 +15,7 @@ Base URL `http://localhost:32783/fhir/r4/`, Basic auth `SuperUser` / `SYS`, name
 import requests
 from requests.auth import HTTPBasicAuth
 
-BASE_URL = "http://localhost:32783/fhir/r4/"
+BASE_URL = "http://localhost:52773/fhir/r4/"
 AUTH = HTTPBasicAuth("SuperUser", "SYS")
 GET_HEADERS = {"Accept": "application/fhir+json"}
 POST_HEADERS = {"Content-Type": "application/fhir+json"}
@@ -124,7 +124,7 @@ from fhirpy import SyncFHIRClient
 import base64
 
 token = base64.b64encode(b"SuperUser:SYS").decode("utf-8")
-client = SyncFHIRClient("http://localhost:32783/fhir/r4/", authorization=f"Basic {token}")
+client = SyncFHIRClient("http://localhost:52773/fhir/r4/", authorization=f"Basic {token}")
 
 matches = client.resources("Patient").search(family="Lemke", given="Tish", birthdate="1978-06-25").fetch()
 if len(matches) != 1:

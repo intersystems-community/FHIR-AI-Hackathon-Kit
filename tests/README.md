@@ -58,7 +58,7 @@ change that cell, update the constant.
 `2.1` passes. `2.2` fails, as expected -- these tests were written to document
 the known breakage:
 
-- `baseURL` in 2.2 is `http://localhost:32783/csp/healthshare/demo/fhir/r4/`,
+- `baseURL` in 2.2 is `http://localhost:52773/csp/healthshare/demo/fhir/r4/`,
   but the FHIR server in this repo is installed at `/fhir/r4` (see
   `docker-iris-fhir/fhir_server_setup.py`). The documented URL returns 404.
 - The credentials are `_SYSTEM` / `ISCDEMO`; the instance uses `SuperUser` / `SYS`.
