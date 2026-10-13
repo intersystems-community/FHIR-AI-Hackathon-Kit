@@ -47,7 +47,16 @@ AI coding agents are also able to flatten this learning curve, so if you do need
 
 ### Quick start
 
-Docker must be installed and running. From the root of this repository:
+Docker must be installed and running. 
+
+Clone the repo:
+
+```sh
+git clone https://github.com/intersystems-community/FHIR-AI-Hackathon-Kit.git
+cd FHIR-AI-Hackathon-Kit
+```
+
+From the root of this repository:
 
 ```sh
 # 1. Start InterSystems IRIS for Health with a FHIR server (use start.ps1 in PowerShell)
