@@ -8,10 +8,13 @@ Layered the same way as the 2.1 tests:
   changed IRIS password.
 * `TestNotebookStructure` -- dependencies are importable and the notebook
   defines its variables before using them.
-* `TestNotebookExecution` -- the notebook runs top to bottom with no unexpected
-  cell raising, and the resources it POSTs come back out of the server.
-  Missing input files (Synthea bundles, clinical note) surface here as cell
-  errors.
+* `TestNotebookExecution` -- the notebook runs top to bottom with no cell
+  raising, and the Synthea bundles it POSTs come back out of the server.
+  Missing input files (Synthea bundles) surface here as cell errors.
+
+3.1 only POSTs the Synthea bundles; the Bulk Load section is markdown and is not
+executed. Creating resources and transaction bundles are covered by
+test_3_3_create_fhir_resources.py and test_3_4_transaction_bundles.py.
 """
 
 import re
@@ -33,11 +36,6 @@ from conftest import (
 
 REQUEST_TIMEOUT_SECONDS = 60
 
-# The tutorial deliberately shows this cell failing: it calls res.json() on the
-# empty body of a successful 201 POST to make the point that the error-inspection
-# trick only works when there *is* an error.
-DELIBERATE_ERROR_CELL_IDS = frozenset({"cb56dc36-ab6f-4b8f-baaa-f5be3a11e09b"})
-
 
 def fhir_get(fhir_config: dict, path: str) -> requests.Response:
     """GET `path` from the FHIR server using the notebook's URL and credentials."""
@@ -53,9 +51,9 @@ class TestFhirEndpointAndCredentials:
     """The FHIR endpoint and credentials written into notebook 3.1 must work."""
 
     def test_post_and_get_urls_agree(self, fhir_config):
-        """The notebook sets `server_url` and `baseURL` separately; they must match."""
+        """3.1 sets `server_url`, 3.3 sets `baseURL`; they must match."""
         assert fhir_config["server_url"] == fhir_config["base_url"], (
-            "The bundle-upload URL and the resource URL in 3.1 point at different "
+            "The bundle-upload URL in 3.1 and the resource URL in 3.3 point at different "
             f"servers: {fhir_config['server_url']!r} vs {fhir_config['base_url']!r}."
         )
 
@@ -108,25 +106,12 @@ class TestFhirEndpointAndCredentials:
         assert body["resourceType"] == "Bundle"
         assert body["type"] == "searchset"
 
-    def test_documentreference_search_endpoint_works(self, fhir_config):
-        """The notebook reads DocumentReference back by patient reference."""
-        res = fhir_get(fhir_config, "DocumentReference?_count=1")
-        assert res.status_code == 200, (
-            f"GET {fhir_config['base_url']}DocumentReference returned "
-            f"{res.status_code}.\nBody: {res.text[:500]}"
-        )
-        assert res.json()["resourceType"] == "Bundle"
-
 
 class TestNotebookStructure:
     """The notebook's dependencies are importable and its cells are self-consistent."""
 
     def test_dependencies_importable(self):
         pytest.importorskip("requests", reason="requests is not installed")
-        pytest.importorskip(
-            "fhir.resources",
-            reason="fhir.resources is not installed (pip install fhir.resources)",
-        )
 
     def test_no_variable_is_used_before_it_is_assigned(self):
         """Catches the classic notebook bug of a cell depending on a later cell.
@@ -146,8 +131,7 @@ class TestNotebookStructure:
             assigned |= set(re.findall(r"\bimport\s+(?:\w+\s+as\s+)?(\w+)", source))
             assigned |= set(re.findall(r"^\s*(?:def|class)\s+(\w+)", source, re.MULTILINE))
             assigned |= set(re.findall(r"\bfor\s+([\w, ]+?)\s+in\b", source))
-            for name in ("baseURL", "server_url", "endpoint", "headers", "get_headers",
-                         "username", "password", "superman", "batman", "note_resource"):
+            for name in ("server_url", "endpoint", "username", "password"):
                 if re.search(rf"\b{name}\b", source) and name not in assigned:
                     problems.append(
                         f"Cell {index} (id={cell.get('id')}) uses {name!r} before any "
@@ -159,10 +143,6 @@ class TestNotebookStructure:
 @pytest.fixture(scope="module")
 def executed():
     """Notebook 3.1 executed once, shared by every execution-dependent test."""
-    pytest.importorskip(
-        "fhir.resources",
-        reason="fhir.resources is required to execute 3.1 (pip install fhir.resources)",
-    )
     return execute_notebook(NOTEBOOK_3_1)
 
 
@@ -170,7 +150,7 @@ class TestNotebookExecution:
     """Execute 3.1 end to end and check its outputs against the server."""
 
     def test_no_unexpected_cell_raises(self, executed):
-        assert_no_cell_errors(executed, allowed_error_cell_ids=DELIBERATE_ERROR_CELL_IDS)
+        assert_no_cell_errors(executed)
 
     def test_bundle_uploads_all_succeed(self, executed):
         """The upload loop prints one response per file; none may be an error status."""
@@ -184,60 +164,6 @@ class TestNotebookExecution:
             f"Output:\n{text[:2000]}"
         )
 
-    def test_patient_post_returns_201(self, executed):
-        """POSTing the superman Patient resource must be created, not rejected."""
-        cell = find_cell(executed, "data=superman.model_dump_json()")
-        text = cell_text(cell)
-        assert "<Response [201]>" in text, (
-            f"Expected a 201 Created for the Patient POST. Got:\n{text}"
-        )
-
-    def test_second_patient_post_returns_201(self, executed):
-        cell = find_cell(executed, "data= batman.model_dump_json()")
-        assert "<Response [201]>" in cell_text(cell)
-
-    def test_malformed_documentreference_is_rejected_with_400(self, executed):
-        """The tutorial teaches server-side validation via a deliberate 400."""
-        cell = find_cell(executed, 'baseURL+"DocumentReference", data=note_resource.model_dump_json()')
-        text = cell_text(cell)
-        assert "<Response [400]>" in text, (
-            "The tutorial's teaching point is that the server rejects the malformed "
-            f"subject reference with a 400. Got:\n{text}"
-        )
-        assert "MalformedRelativeReference" in text or "malformed" in text.lower()
-
-    def test_validation_issues_are_printed(self, executed):
-        cell = find_cell(executed, 'for issue in res.json()["issue"]')
-        text = cell_text(cell)
-        assert "subject" in text, (
-            f"Expected the malformed subject issue to be printed. Got:\n{text}"
-        )
-
-    def test_fixed_documentreference_is_accepted(self, executed):
-        """After fixing the subject reference, the POST must return 201."""
-        cells = [
-            cell
-            for cell in code_cells(executed)
-            if 'baseURL+"DocumentReference"' in cell.source and "requests.post" in cell.source
-        ]
-        assert len(cells) >= 2, "Expected a failing and a fixed DocumentReference POST cell."
-        text = cell_text(cells[-1])
-        assert "<Response [201]>" in text, (
-            f"The corrected DocumentReference POST did not return 201. Got:\n{text}"
-        )
-
-    def test_documentreference_read_back_returns_200(self, executed):
-        cell = find_cell(executed, 'DocumentReference?patient=')
-        assert "<Response [200]>" in cell_text(cell)
-
-    def test_note_is_decoded_from_the_attachment(self, executed):
-        """The last cell hex-decodes the attachment and prints the clinical note."""
-        cell = find_cell(executed, "bytes.fromhex(")
-        text = cell_text(cell)
-        assert "Clark Kent" in text, (
-            f"The decoded DocumentReference attachment did not contain the note. Got:\n{text[:1000]}"
-        )
-
     def test_patient_listing_shows_uploaded_synthea_patients(self, executed):
         """The check-the-upload cell should list patients from the Synthea bundles."""
         cell = find_cell(executed, "## Get the last 5 entries")
@@ -249,7 +175,7 @@ class TestNotebookExecution:
 
 
 class TestUploadedDataVisibleOnServer:
-    """After executing the notebook, the data it created must be queryable.
+    """After executing the notebook, the data it uploaded must be queryable.
 
     Depends on the `executed` fixture so the notebook has actually run first.
     """
@@ -261,11 +187,4 @@ class TestUploadedDataVisibleOnServer:
         assert body["total"] >= 1, (
             "The Synthea patient 'Walsh511' from data/fhir is not on the server, so "
             "the bundle upload loop did not take effect."
-        )
-
-    def test_notebook_created_patients_are_on_the_server(self, executed, fhir_config):
-        res = fhir_get(fhir_config, "Patient?family=Kent&given=Clark")
-        assert res.status_code == 200, f"Patient search failed: {res.status_code} {res.text[:300]}"
-        assert res.json()["total"] >= 1, (
-            "The Clark Kent Patient the notebook POSTs is not on the server."
         )

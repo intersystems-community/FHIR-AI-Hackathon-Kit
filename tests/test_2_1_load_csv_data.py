@@ -100,8 +100,8 @@ class TestConnectionDetails:
         conn.close()
 
     def test_hello_from_iris_query_returns_expected_string(self, iris_connection_args):
-        """The notebook's first cell prints 'Hello From IRIS'."""
-        assert scalar_query(iris_connection_args, "SELECT 'Hello From IRIS'") == "Hello From IRIS"
+        """The notebook's first cell prints 'Hello From InterSystems IRIS'."""
+        assert scalar_query(iris_connection_args, "SELECT 'Hello From InterSystems IRIS'") == "Hello From InterSystems IRIS"
 
     def test_connected_namespace_matches_connection_args(self, iris_connection_args):
         namespace = scalar_query(iris_connection_args, "SELECT $NAMESPACE")
@@ -153,8 +153,8 @@ class TestNotebookExecution:
         assert_no_cell_errors(executed)
 
     def test_hello_cell_prints_greeting(self, executed):
-        cell = find_cell(executed, "Hello From IRIS")
-        assert "Hello From IRIS" in cell_text(cell)
+        cell = find_cell(executed, "Hello From InterSystems IRIS")
+        assert "Hello From InterSystems IRIS" in cell_text(cell)
 
     def test_superheros_dataframe_preview_rendered(self, executed):
         """`df.head()` on superheros.csv should show the comic book names."""
