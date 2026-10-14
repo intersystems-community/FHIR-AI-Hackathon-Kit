@@ -111,10 +111,11 @@ Each of the tutorials are IPython (Jupyter) notebooks. These are notebooks which
 - [2.2 Querying SQL Data with Python](./Tutorials/2-tabular/2.2-querying-sql-tables-with-python.ipynb)
 
 ### 3. FHIR Data
-- [3.1 Adding FHIR data to a FHIR server](./Tutorials/3-fhir/3.1-load-fhir-data.ipynb)
+- [3.0 Setting up a FHIR server](./Tutorials/3-fhir/3.0-setup-fhir-server.ipynb)
+- [3.1 Loading FHIR data](./Tutorials/3-fhir/3.1-load-fhir-data.ipynb)
 - [3.2 Accessing FHIR resources](./Tutorials/3-fhir/3.2-querying-fhir-data-with-python.ipynb)
-- [3.3 Viewing the FHIR Specification with Swagger](./Tutorials/3-fhir/3.3-viewing-fhir-specification-with-swagger.md)
-- [3.4 Creating Synthetic FHIR data](./Tutorials/3-fhir/3.4-create-synthetic-fhir-data.md)
+- [3.3 Creating FHIR resources](./Tutorials/3-fhir/3.3-create-fhir-resources.ipynb)
+- [3.4 Creating transaction bundles](./Tutorials/3-fhir/3.4-create-transaction-bundles.ipynb)
 
 ### 4. Vector Search
 - [4.1 Vector Search](./Tutorials/4-vector-search/4.1-vector-search.ipynb)
@@ -127,6 +128,10 @@ Each of the tutorials are IPython (Jupyter) notebooks. These are notebooks which
 - [Create a FHIR Server in 5 minutes with IRIS Health Community](./Tutorials/6-extras/CreateAFHIRServerIn5Minutes.md)
 
 - [Integrated Machine Learning Quickstart](./Tutorials/6-extras/ML-predictions-made-simple.md)
+
+- [Viewing the FHIR Specification with Swagger](./Tutorials/6-extras/viewing-fhir-specification-with-swagger.md)
+
+- [Creating Synthetic FHIR data](./Tutorials/6-extras/create-synthetic-fhir-data.md)
 
 ## Further reading
 
